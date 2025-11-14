@@ -1,0 +1,13 @@
+
+Category,Idea / Feature,Purpose,Who It Mainly Serves,Data / Structure Needed,Notes / Risks / Questions
+Profiles,Peer-Interviewed Profiles,Turn profiles into relational reflections instead of self-marketing,Members & community weavers,"Profile fields, interview notes, 'interviewed by' attribution",Takes time; need clear opt-in and simple guide.
+Directory,Offers & Needs Board,Make it easy to see how people can help each other and what support is needed,"Members, hearth holders","Offers, needs, tags, urgency, region",Risk of overwhelm; may need light curation.
+Stories,Story & Practice Cards,Share concrete practices and stories that carried people through,All members,"Short narrative fields, practice tags, links",Need safety guidelines for depth/vulnerability.
+Appreciation,Gratitude / Appreciation Wall,Make invisible care visible and nourish a culture of thanks,Whole ecosystem,"Short notes linked to profiles / general wall",Moderation for boundaries and potential discomfort.
+Map,Global Hearth Map,Give a felt sense of global spread and support local connection,"Members, organisers","Location (city/region), roles, time zone",Privacy concerns; location should be coarse, not precise.
+Rhythm,Hearth Season Annual Update,Create a yearly ritual to refresh profiles with reflection,Whole ecosystem,"Date-based prompts, minimal update form",Needs clear holding and communication.
+Rhythm,Peer Interview Weeks,Generate waves of updated profiles and deepen peer connection,"Members, community weavers","Sign-up flow, pairing, interview templates",Could overburden a small group if not shared.
+Events,Learning Circles with Profile Touchpoints,Tie profile updates to real conversations and themes,"Participants, circle hosts","Circle topics, participation records, small prompts",Hosts need simple tools; avoid admin overload.
+Directory,Therapist & Practitioner Finder,Provide a trusted, self-serve way to find practitioners,"Members seeking support, core team","Practitioner profiles, tags, recommendation provenance",Liability & expectations; need clear framing of responsibility.
+Incentives,Access-with-Gift Moments,Invite small acts of reciprocity when people request from the network,Members,"Trigger points (e.g., search), micro-prompts, optional fields",Must feel invitational, not coercive.
+Spotlights,Peer Spotlights & Story Cycles,Regularly lift up different people and practices,Whole ecosystem,"Spotlight selection, stories, visuals",Guard against popularity contests; ensure diversity.
