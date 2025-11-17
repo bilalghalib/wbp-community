@@ -237,33 +237,37 @@ Example: Adding service provider search
 
 ## Phase 1 Implementation Roadmap
 
-### Phase 1A (Weeks 1-4): Foundation ✅ SCAFFOLDING COMPLETE
+### Phase 1A (Weeks 1-4): Foundation ✅ COMPLETE
 
-- [x] Database schema
-- [x] RLS policies
+- [x] Database schema (11 tables)
+- [x] RLS policies (comprehensive)
 - [x] Next.js project structure
 - [x] Authentication (email + password)
-- [ ] Organization creation workflow
-- [ ] User invitation system
-- [ ] Service provider registry
-- [ ] Admin panel (WBP)
+- [x] Organization creation workflow
+- [x] User invitation system
+- [x] Service provider registry with trust signals
+- [x] Admin panel (WBP)
+- [x] Member management UI
 
-### Phase 1B (Weeks 5-8): Research Repository
+### Phase 1B (Weeks 5-8): Research Repository ✅ COMPLETE
 
-- [ ] PDF upload to Supabase Storage
-- [ ] Research metadata forms
-- [ ] Organization research gallery
-- [ ] Network-wide research library
-- [ ] Tag-based discovery
-- [ ] RAG/AI search (stretch goal)
+- [x] PDF upload to Supabase Storage
+- [x] Research metadata forms
+- [x] Organization research gallery
+- [x] Network-wide research library
+- [x] Tag-based discovery (25 tags, 12 topics)
+- [x] Full-text search (PostgreSQL tsvector)
+- [ ] RAG/AI search (future enhancement)
 
-### Phase 1C (Weeks 9-12): Survey Tool
+### Phase 1C (Weeks 9-12): Survey Tool ✅ COMPLETE
 
-- [ ] Survey template creation (WBP admin)
-- [ ] Survey deployment workflow
-- [ ] Anonymous response collection
-- [ ] Aggregate reporting dashboard
-- [ ] Export functionality
+- [x] Survey template library (5 templates)
+- [x] Survey deployment workflow (admin)
+- [x] Anonymous response collection
+- [x] Aggregate reporting dashboard
+- [x] Privacy threshold enforcement (≥3 responses)
+- [x] Time-series tracking
+- [x] Export functionality (CSV, JSON)
 
 ## Key Design Decisions
 
@@ -304,6 +308,62 @@ get_deployment_aggregate_stats(deployment_id) -- Returns counts/averages only
 - Orgs edit: `service_provider_recommendations` table (separate relationship)
 - RLS policies enforce this split
 
+## Testing
+
+### Running Tests
+
+```bash
+# Unit tests (Vitest)
+npm test
+
+# Unit tests with UI
+npm run test:ui
+
+# Coverage report
+npm run test:coverage
+
+# E2E tests (Playwright)
+npm run test:e2e
+
+# E2E tests with UI
+npm run test:e2e:ui
+
+# Type checking
+npm run type-check
+```
+
+### Test Structure
+
+```
+__tests__/
+├── utils/
+│   ├── constants/
+│   │   ├── surveys.test.ts       # Survey template tests
+│   │   └── research.test.ts      # Research constant tests
+│   └── mock-supabase.ts          # Mocking utilities
+
+e2e/
+├── fixtures.ts                   # Auth fixtures
+├── surveys.spec.ts               # Survey flow tests
+├── research.spec.ts              # Research flow tests
+└── organizations.spec.ts         # Org management tests
+```
+
+### Testing Philosophy
+
+- **Unit Tests**: Pure logic, constants, utilities
+- **Component Tests**: React components with Testing Library
+- **E2E Tests**: Full user flows with Playwright
+- **No Login Required**: E2E tests use mock authentication
+- **Privacy First**: Tests verify aggregate-only access
+
+### Key Testing Features
+
+1. **Mock Auth**: Bypass login in E2E tests via fixtures
+2. **Mock Supabase**: Mock database responses without real backend
+3. **Privacy Validation**: Tests verify individual data is never accessible
+4. **Accessibility**: Tests check ARIA labels, keyboard nav (TODO)
+
 ## Contributing
 
 Before adding features:
@@ -312,6 +372,8 @@ Before adding features:
 2. Read `hearthfiles/mvp-design-plan.md` - understand scope
 3. Check which persona(s) this serves
 4. Follow the VALUES → DATABASE → AFFORDANCES → UX → UI → CODE flow
+5. **Write tests** for new features (unit + E2E)
+6. Run `npm run type-check` before committing
 
 ## Support
 
