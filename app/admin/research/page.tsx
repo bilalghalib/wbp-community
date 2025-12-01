@@ -104,9 +104,10 @@ export default async function AdminResearchPage() {
   allResearch?.forEach(doc => {
     const orgId = doc.organization_id
     if (!orgContributions[orgId]) {
+      const org = Array.isArray(doc.organization) ? doc.organization[0] : doc.organization
       orgContributions[orgId] = {
-        name: doc.organization.name,
-        slug: doc.organization.slug,
+        name: org?.name || 'Unknown',
+        slug: org?.slug || '',
         count: 0,
       }
     }
