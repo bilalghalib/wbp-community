@@ -70,7 +70,10 @@ export default async function EditProviderPage({
   }
 
   const organizations = memberships
-    .map((m) => m.organization?.[0])
+    .map((m) => {
+      const org = Array.isArray(m.organization) ? m.organization[0] : m.organization
+      return org
+    })
     .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
 
   return (
