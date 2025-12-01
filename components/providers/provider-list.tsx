@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 type Provider = {
@@ -38,9 +39,11 @@ export default function ProviderList({ providers }: { providers: Provider[] }) {
             {/* Photo */}
             <div className="flex-shrink-0">
               {provider.photo_url ? (
-                <img
+                <Image
                   src={provider.photo_url}
                   alt={provider.full_name}
+                  width={96}
+                  height={96}
                   className="h-24 w-24 rounded-full object-cover"
                 />
               ) : (

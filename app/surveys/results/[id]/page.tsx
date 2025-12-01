@@ -81,9 +81,13 @@ export default async function SurveyResultsPage({ params }: PageProps) {
   const { data: aggregateStats } = await supabase
     .rpc('get_deployment_aggregate_stats', { deployment_id_param: deployment.id })
 
+  // Extract survey and organization from relations
+  const survey = Array.isArray(deployment.survey) ? deployment.survey[0] : deployment.survey
+  const organization = Array.isArray(deployment.organization) ? deployment.organization[0] : deployment.organization
+
   // Get template definition using template_id
-  const template = deployment.survey.template_id
-    ? getSurveyTemplate(deployment.survey.template_id)
+  const template = survey?.template_id
+    ? getSurveyTemplate(survey.template_id)
     : null
 
   // Calculate aggregate scores for each metric
@@ -160,9 +164,9 @@ export default async function SurveyResultsPage({ params }: PageProps) {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{deployment.title}</h1>
-          <p className="mt-2 text-gray-600">{deployment.survey.description}</p>
+          <p className="mt-2 text-gray-600">{survey?.description}</p>
           <div className="mt-4 flex items-center space-x-4 text-sm text-gray-500">
-            <span>{deployment.organization.name}</span>
+            <span>{organization?.name}</span>
             <span>•</span>
             <span>Deployed {new Date(deployment.created_at).toLocaleDateString('en-US', {
               month: 'short',
@@ -287,8 +291,8 @@ export default async function SurveyResultsPage({ params }: PageProps) {
           <div className="space-y-4">
             <div>
               <h3 className="text-sm font-semibold text-gray-700 mb-2">Template</h3>
-              <p className="text-sm text-gray-900">{deployment.survey.title}</p>
-              <p className="text-xs text-gray-500 mt-1">{template?.category} • {deployment.survey.questions.length} questions</p>
+              <p className="text-sm text-gray-900">{survey?.title}</p>
+              <p className="text-xs text-gray-500 mt-1">{template?.category} • {survey?.questions.length} questions</p>
             </div>
             {template && (
               <div>

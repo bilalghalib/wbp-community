@@ -193,7 +193,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate scores based on template
-    const scores = calculateScores(answers, deployment.survey.template_id)
+    const survey = Array.isArray(deployment.survey) ? deployment.survey[0] : deployment.survey
+    const scores = calculateScores(answers, survey?.template_id)
 
     // Insert response
     const { data: response, error: responseError } = await supabase

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -103,9 +104,11 @@ export default function MemberList({ members, organizationId, currentUserId, isA
                 <div className="flex items-center flex-1 min-w-0">
                   {/* Avatar */}
                   {member.user?.avatar_url ? (
-                    <img
+                    <Image
                       src={member.user.avatar_url}
                       alt={member.user.full_name}
+                      width={40}
+                      height={40}
                       className="h-10 w-10 rounded-full"
                     />
                   ) : (

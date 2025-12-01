@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import Image from 'next/image'
 import { redirect, notFound } from 'next/navigation'
 
 export default async function ProviderDetailPage({
@@ -63,9 +64,11 @@ export default async function ProviderDetailPage({
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="flex gap-6">
             {provider.photo_url ? (
-              <img
+              <Image
                 src={provider.photo_url}
                 alt={provider.full_name}
+                width={128}
+                height={128}
                 className="h-32 w-32 rounded-full object-cover"
               />
             ) : (
@@ -109,7 +112,7 @@ export default async function ProviderDetailPage({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                   </svg>
                   <div className="flex flex-wrap gap-1.5">
-                    {provider.languages.map((language) => (
+                    {provider.languages.map((language: string) => (
                       <span
                         key={language}
                         className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700"
@@ -235,7 +238,7 @@ export default async function ProviderDetailPage({
           <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">Specialties</h2>
             <div className="flex flex-wrap gap-2">
-              {provider.specialties.map((specialty) => (
+              {provider.specialties.map((specialty: string) => (
                 <span
                   key={specialty}
                   className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800"
@@ -252,7 +255,7 @@ export default async function ProviderDetailPage({
           <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3">Modalities & Approaches</h2>
             <div className="flex flex-wrap gap-2">
-              {provider.modalities.map((modality) => (
+              {provider.modalities.map((modality: string) => (
                 <span
                   key={modality}
                   className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-blue-100 text-blue-800"

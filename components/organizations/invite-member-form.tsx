@@ -66,7 +66,7 @@ export default function InviteMemberForm({ organizationId, organizationName }: P
       {success && (
         <div className="rounded-md bg-green-50 p-3">
           <p className="text-sm text-green-800">
-            Invitation sent! They'll receive an email with instructions to join.
+            Invitation sent! They&apos;ll receive an email with instructions to join.
           </p>
         </div>
       )}

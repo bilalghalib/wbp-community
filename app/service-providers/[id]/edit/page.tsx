@@ -32,7 +32,7 @@ export default async function EditProviderPage({
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Denied</h1>
           <p className="mt-2 text-gray-600">
-            You can only edit service providers you've added.
+            You can only edit service providers you&apos;ve added.
           </p>
           <a href={`/service-providers/${params.id}`} className="mt-4 inline-block text-blue-600 hover:text-blue-500">
             Back to Provider
@@ -69,6 +69,10 @@ export default async function EditProviderPage({
     )
   }
 
+  const organizations = memberships
+    .map((m) => m.organization?.[0])
+    .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -91,7 +95,7 @@ export default async function EditProviderPage({
 
         <AddProviderForm
           userId={user.id}
-          organizations={memberships.map(m => m.organization).filter(Boolean)}
+          organizations={organizations}
           existingProvider={provider}
           isEditing={true}
         />

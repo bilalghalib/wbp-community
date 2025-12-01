@@ -77,7 +77,7 @@ export default async function MembersPage({
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Team Members</h1>
           <p className="mt-2 text-gray-600">
-            Manage who has access to {org.name}'s resources and what they can do.
+            Manage who has access to {org.name}&apos;s resources and what they can do.
           </p>
         </div>
 

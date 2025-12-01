@@ -40,6 +40,15 @@ export default async function DeploySurveyPage({ searchParams }: PageProps) {
     )
   }
 
+  const organizations = adminMemberships
+    .map((m) => m.organization?.[0])
+    .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
+    .map((org) => ({
+      id: org.id,
+      name: org.name,
+      slug: org.slug,
+    }))
+
   // Get selected template if provided
   const selectedTemplate = searchParams.template
     ? getSurveyTemplate(searchParams.template as any)
@@ -83,11 +92,7 @@ export default async function DeploySurveyPage({ searchParams }: PageProps) {
 
         <SurveyDeploymentForm
           userId={user.id}
-          organizations={adminMemberships.map(m => ({
-            id: m.organization.id,
-            name: m.organization.name,
-            slug: m.organization.slug,
-          }))}
+          organizations={organizations}
           selectedTemplateId={selectedTemplate?.id}
           templates={SURVEY_TEMPLATES}
         />

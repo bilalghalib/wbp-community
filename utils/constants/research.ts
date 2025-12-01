@@ -22,6 +22,11 @@ export const RESEARCH_TAGS = [
   'Climate Justice',
   'Disability Justice',
   'Economic Justice',
+  'Mutual Aid',
+  'Resilience Building',
+  'Mindfulness',
+  'Caregiver Support',
+  'Workplace Culture',
 ] as const
 
 export const RESEARCH_TOPICS = [

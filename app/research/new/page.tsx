@@ -57,11 +57,14 @@ export default async function NewResearchPage() {
 
         <ResearchUploadForm
           userId={user.id}
-          organizations={memberships.map(m => ({
-            id: m.organization.id,
-            name: m.organization.name,
-            slug: m.organization.slug,
-          }))}
+          organizations={memberships
+            .map((m) => m.organization?.[0])
+            .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
+            .map((org) => ({
+              id: org.id,
+              name: org.name,
+              slug: org.slug,
+            }))}
         />
       </main>
     </div>

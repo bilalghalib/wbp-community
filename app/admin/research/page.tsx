@@ -315,7 +315,7 @@ export default async function AdminResearchPage() {
                         {doc.title}
                       </h3>
                       <p className="text-xs text-gray-500 mt-0.5">
-                        {doc.organization.name}
+                        {(Array.isArray(doc.organization) ? doc.organization[0] : doc.organization)?.name || 'Unknown'}
                       </p>
                     </div>
                     <span
@@ -374,7 +374,7 @@ export default async function AdminResearchPage() {
               <h3 className="text-sm font-semibold text-blue-900">Research Insights</h3>
               <p className="mt-1 text-sm text-blue-700">
                 Use these insights to identify trending topics, encourage contributions from organizations
-                that haven't shared research yet, and surface valuable resources to the network.
+                that haven&apos;t shared research yet, and surface valuable resources to the network.
                 Consider creating curated collections based on popular tags.
               </p>
             </div>

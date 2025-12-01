@@ -78,17 +78,18 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     const { data: allMetrics } = await supabase
       .rpc('get_all_deployment_metrics', { deployment_id_param: deploymentId })
 
-    const template = getSurveyTemplate(deployment.survey.template_id)
+    const survey = Array.isArray(deployment.survey) ? deployment.survey[0] : deployment.survey
+    const template = getSurveyTemplate(survey?.template_id)
 
     // Build export data
     const exportData = {
       survey: {
         deployment_id: deployment.id,
         title: deployment.title,
-        template: deployment.survey.title,
-        template_id: deployment.survey.template_id,
-        category: deployment.survey.category,
-        organization: deployment.organization.name,
+        template: survey?.title,
+        template_id: survey?.template_id,
+        category: survey?.category,
+        organization: (Array.isArray(deployment.organization) ? deployment.organization[0] : deployment.organization)?.name,
         deployed_at: deployment.created_at,
         closes_at: deployment.closes_at,
       },

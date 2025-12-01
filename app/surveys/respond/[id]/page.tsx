@@ -35,6 +35,17 @@ export default async function SurveyResponsePage({ params }: PageProps) {
     notFound()
   }
 
+  const organization = Array.isArray(deployment.organization)
+    ? deployment.organization[0]
+    : deployment.organization
+  const survey = Array.isArray(deployment.survey)
+    ? deployment.survey[0]
+    : deployment.survey
+
+  if (!survey) {
+    notFound()
+  }
+
   // Check user is member of the organization
   const { data: membership } = await supabase
     .from('organization_memberships')
@@ -50,7 +61,7 @@ export default async function SurveyResponsePage({ params }: PageProps) {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Restricted</h1>
           <p className="mt-2 text-gray-600">
-            This survey is only available to members of {deployment.organization.name}.
+            This survey is only available to members of {organization?.name || 'this organization'}.
           </p>
           <Link href="/surveys" className="mt-4 inline-block text-blue-600 hover:text-blue-500">
             Return to Surveys
@@ -119,7 +130,7 @@ export default async function SurveyResponsePage({ params }: PageProps) {
   }
 
   // Get template for additional metadata
-  const template = getSurveyTemplate(deployment.survey.template_id)
+  const template = getSurveyTemplate(survey.template_id)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -137,13 +148,13 @@ export default async function SurveyResponsePage({ params }: PageProps) {
         {/* Survey Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{deployment.title}</h1>
-          <p className="mt-2 text-gray-600">{deployment.survey.description}</p>
+          <p className="mt-2 text-gray-600">{survey.description}</p>
           <div className="mt-4 flex items-center space-x-4 text-sm text-gray-500">
             <span className="inline-flex items-center">
               <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
-              {deployment.organization.name}
+              {organization?.name || 'Organization'}
             </span>
             {template && (
               <>
@@ -186,8 +197,8 @@ export default async function SurveyResponsePage({ params }: PageProps) {
         <SurveyResponseForm
           deploymentId={deployment.id}
           userId={user.id}
-          questions={deployment.survey.questions}
-          templateId={deployment.survey.template_id}
+          questions={survey.questions}
+          templateId={survey.template_id}
         />
       </main>
     </div>

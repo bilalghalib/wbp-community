@@ -38,8 +38,12 @@ export default async function SurveysPage() {
     m.role === 'primary_admin' || m.role === 'backup_admin'
   )
 
+  const organizations = memberships
+    .map((m) => m.organization?.[0])
+    .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
+
   // Get active deployments for user's organizations
-  const orgIds = memberships.map(m => m.organization.id)
+  const orgIds = organizations.map((org) => org.id)
   const { data: activeDeployments } = await supabase
     .from('survey_deployments')
     .select(`

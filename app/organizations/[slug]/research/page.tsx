@@ -132,13 +132,13 @@ export default async function OrganizationResearchPage({ params, searchParams }:
                 <select
                   value={searchParams.tag || ''}
                   onChange={(e) => {
-                    const params = new URLSearchParams(searchParams as any)
+                    const urlParams = new URLSearchParams(searchParams as any)
                     if (e.target.value) {
-                      params.set('tag', e.target.value)
+                      urlParams.set('tag', e.target.value)
                     } else {
-                      params.delete('tag')
+                      urlParams.delete('tag')
                     }
-                    window.location.href = `/organizations/${params.slug}/research?${params.toString()}`
+                    window.location.href = `/organizations/${params.slug}/research?${urlParams.toString()}`
                   }}
                   className="block rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
@@ -158,13 +158,13 @@ export default async function OrganizationResearchPage({ params, searchParams }:
                 <select
                   value={searchParams.topic || ''}
                   onChange={(e) => {
-                    const params = new URLSearchParams(searchParams as any)
+                    const urlParams = new URLSearchParams(searchParams as any)
                     if (e.target.value) {
-                      params.set('topic', e.target.value)
+                      urlParams.set('topic', e.target.value)
                     } else {
-                      params.delete('topic')
+                      urlParams.delete('topic')
                     }
-                    window.location.href = `/organizations/${params.slug}/research?${params.toString()}`
+                    window.location.href = `/organizations/${params.slug}/research?${urlParams.toString()}`
                   }}
                   className="block rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >

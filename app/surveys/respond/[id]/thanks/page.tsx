@@ -25,6 +25,10 @@ export default async function SurveyThanksPage({ params }: PageProps) {
     .eq('id', params.id)
     .single()
 
+  const organization = Array.isArray(deployment?.organization)
+    ? deployment.organization[0]
+    : deployment?.organization
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -64,7 +68,7 @@ export default async function SurveyThanksPage({ params }: PageProps) {
           <div className="text-sm text-gray-600 mb-6">
             Survey: <span className="font-medium text-gray-900">{deployment.title}</span>
             <br />
-            Organization: <span className="font-medium text-gray-900">{deployment.organization.name}</span>
+            Organization: <span className="font-medium text-gray-900">{organization?.name || 'Organization'}</span>
           </div>
         )}
 

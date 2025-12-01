@@ -297,7 +297,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
           <h3 className="text-sm font-semibold text-blue-900 mb-2">Organization Management</h3>
           <p className="text-sm text-blue-700">
             This view shows all organizations in the network. Use the search and filters to find specific organizations.
-            Click "View" to see the organization's public profile, or "Members" to manage their membership.
+            Click &quot;View&quot; to see the organization&apos;s public profile, or &quot;Members&quot; to manage their membership.
           </p>
         </div>
       </main>

@@ -51,7 +51,7 @@ export default async function NewProviderPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Permission Required</h1>
           <p className="mt-2 text-gray-600">
-            You don't have permission to add service providers. Contact your organization admin.
+            You don&apos;t have permission to add service providers. Contact your organization admin.
           </p>
           <a href="/service-providers" className="mt-4 inline-block text-blue-600 hover:text-blue-500">
             Back to Service Providers
@@ -77,7 +77,7 @@ export default async function NewProviderPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Add Service Provider</h1>
           <p className="mt-2 text-gray-600">
-            Recommend a therapist, coach, or facilitator you've worked with to the WBP network.
+            Recommend a therapist, coach, or facilitator you&apos;ve worked with to the WBP network.
           </p>
         </div>
 

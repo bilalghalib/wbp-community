@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -84,9 +85,11 @@ export default function PhotoUpload({ currentPhotoUrl, onPhotoChange, userId }: 
         {/* Preview */}
         {preview && (
           <div className="relative flex-shrink-0">
-            <img
+            <Image
               src={preview}
               alt="Profile preview"
+              width={96}
+              height={96}
               className="h-24 w-24 rounded-full object-cover border-2 border-gray-200"
             />
             <button

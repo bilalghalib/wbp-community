@@ -58,7 +58,7 @@ export default function AddProviderForm({ userId, organizations, existingProvide
     setFormData((prev) => ({
       ...prev,
       [field]: prev[field].includes(value)
-        ? prev[field].filter((v) => v !== value)
+        ? prev[field].filter((v: string) => v !== value)
         : [...prev[field], value],
     }))
   }
@@ -343,7 +343,7 @@ export default function AddProviderForm({ userId, organizations, existingProvide
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Your Recommendation (Optional)</h2>
           <p className="text-sm text-gray-700 mb-4">
-            Share context about your organization's relationship with this provider. This helps others understand why you're recommending them.
+            Share context about your organization&apos;s relationship with this provider. This helps others understand why you&apos;re recommending them.
           </p>
 
         <div className="space-y-4">
@@ -368,7 +368,7 @@ export default function AddProviderForm({ userId, organizations, existingProvide
               Would Recommend For (select from specialties above)
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {formData.specialties.map((specialty) => (
+              {formData.specialties.map((specialty: string) => (
                 <label key={specialty} className="flex items-center">
                   <input
                     type="checkbox"

@@ -81,9 +81,10 @@ export default async function AdminSurveysPage() {
 
   // Template usage stats
   const templateUsage = SURVEY_TEMPLATES.map(template => {
-    const count = deploymentsWithStats.filter(
-      d => d.survey.template_id === template.id
-    ).length
+    const count = deploymentsWithStats.filter(d => {
+      const survey = Array.isArray(d.survey) ? d.survey[0] : d.survey
+      return survey?.template_id === template.id
+    }).length
     return { template, count }
   }).sort((a, b) => b.count - a.count)
 
@@ -206,7 +207,7 @@ export default async function AdminSurveysPage() {
                         {deployment.title}
                       </h3>
                       <p className="text-xs text-gray-500">
-                        {deployment.organization.name}
+                        {(Array.isArray(deployment.organization) ? deployment.organization[0] : deployment.organization)?.name || 'Unknown'}
                       </p>
                     </div>
                     <span
@@ -264,7 +265,7 @@ export default async function AdminSurveysPage() {
                     <div key={d.id} className="flex items-center justify-between py-2">
                       <div className="flex-1 min-w-0 mr-4">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {d.organization.name}
+                          {(Array.isArray(d.organization) ? d.organization[0] : d.organization)?.name || 'Unknown'}
                         </p>
                         <p className="text-xs text-gray-500 truncate">{d.title}</p>
                       </div>
@@ -296,7 +297,7 @@ export default async function AdminSurveysPage() {
                       <div key={d.id} className="flex items-center justify-between py-2">
                         <div className="flex-1 min-w-0 mr-4">
                           <p className="text-sm font-medium text-gray-900 truncate">
-                            {d.organization.name}
+                            {(Array.isArray(d.organization) ? d.organization[0] : d.organization)?.name || 'Unknown'}
                           </p>
                           <p className="text-xs text-gray-500 truncate">
                             {daysLeft} days left
