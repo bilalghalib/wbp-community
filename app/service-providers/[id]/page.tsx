@@ -39,10 +39,21 @@ export default async function ProviderDetailPage({
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center">
+          <div className="flex h-16 items-center justify-between">
             <a href="/service-providers" className="text-sm text-gray-700 hover:text-gray-900">
               ← Back to providers
             </a>
+            {provider.created_by_user_id === user.id && (
+              <a
+                href={`/service-providers/${provider.id}/edit`}
+                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+              >
+                <svg className="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit Provider
+              </a>
+            )}
           </div>
         </div>
       </nav>
@@ -91,6 +102,25 @@ export default async function ProviderDetailPage({
                 )}
               </div>
 
+              {/* Languages */}
+              {provider.languages && provider.languages.length > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                  </svg>
+                  <div className="flex flex-wrap gap-1.5">
+                    {provider.languages.map((language) => (
+                      <span
+                        key={language}
+                        className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700"
+                      >
+                        {language}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="mt-4">
                 {provider.is_accepting_clients ? (
                   <div className="flex items-center text-green-700">
@@ -118,11 +148,11 @@ export default async function ProviderDetailPage({
         {/* Trust Signals - Recommendations */}
         {provider.recommendations && provider.recommendations.length > 0 && (
           <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <div className="flex items-start">
-              <svg className="h-6 w-6 text-yellow-600 mt-1" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-start mb-4">
+              <svg className="h-6 w-6 text-yellow-600 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              <div className="ml-3">
+              <div className="ml-3 flex-1">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Recommended by {provider.recommendations.length} organization
                   {provider.recommendations.length !== 1 ? 's' : ''}
@@ -131,6 +161,61 @@ export default async function ProviderDetailPage({
                   These organizations have worked with {provider.full_name.split(' ')[0]} and recommend their services.
                 </p>
               </div>
+            </div>
+
+            {/* Expandable Recommendations */}
+            <div className="space-y-3">
+              {provider.recommendations.map((rec: any) => (
+                <details key={rec.id} className="group bg-white rounded-lg border border-yellow-300">
+                  <summary className="cursor-pointer list-none px-4 py-3 hover:bg-yellow-50 rounded-lg transition-colors">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-900">
+                            {rec.organization?.name || 'Organization'}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            • {new Date(rec.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                          </span>
+                        </div>
+                        {rec.would_recommend_for && rec.would_recommend_for.length > 0 && (
+                          <div className="mt-1 text-xs text-gray-600">
+                            Recommended for: {rec.would_recommend_for.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                      <svg
+                        className="h-5 w-5 text-gray-400 transition-transform group-open:rotate-180 flex-shrink-0 ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </summary>
+                  <div className="px-4 pb-4 pt-2 border-t border-yellow-200">
+                    {rec.relationship_note && (
+                      <p className="text-sm text-gray-700 leading-relaxed">{rec.relationship_note}</p>
+                    )}
+                    {rec.would_recommend_for && rec.would_recommend_for.length > 0 && (
+                      <div className="mt-3">
+                        <span className="text-xs font-medium text-gray-600">Recommended for:</span>
+                        <div className="mt-1.5 flex flex-wrap gap-1">
+                          {rec.would_recommend_for.map((specialty: string) => (
+                            <span
+                              key={specialty}
+                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200"
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </details>
+              ))}
             </div>
           </div>
         )}
@@ -174,62 +259,6 @@ export default async function ProviderDetailPage({
                 >
                   {modality}
                 </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Languages */}
-        {provider.languages && provider.languages.length > 0 && (
-          <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Languages</h2>
-            <div className="flex flex-wrap gap-2">
-              {provider.languages.map((language) => (
-                <span
-                  key={language}
-                  className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800"
-                >
-                  {language}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Detailed Recommendations */}
-        {provider.recommendations && provider.recommendations.length > 0 && (
-          <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recommendations</h2>
-            <div className="space-y-4">
-              {provider.recommendations.map((rec: any) => (
-                <div key={rec.id} className="border-l-4 border-yellow-400 pl-4 py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-900">
-                      {rec.organization?.name || 'Organization'}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      • {new Date(rec.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                    </span>
-                  </div>
-                  {rec.relationship_note && (
-                    <p className="mt-1 text-sm text-gray-700">{rec.relationship_note}</p>
-                  )}
-                  {rec.would_recommend_for && rec.would_recommend_for.length > 0 && (
-                    <div className="mt-2">
-                      <span className="text-xs text-gray-600">Recommended for: </span>
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {rec.would_recommend_for.map((specialty: string) => (
-                          <span
-                            key={specialty}
-                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700"
-                          >
-                            {specialty}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
               ))}
             </div>
           </div>

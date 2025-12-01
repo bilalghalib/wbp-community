@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ResearchGrid from '@/components/research/research-grid'
+import ResearchFilters from '@/components/research/research-filters'
 
 type SearchParams = {
   tag?: string
@@ -115,82 +116,19 @@ export default async function ResearchLibraryPage({
         </div>
 
         {/* Filters */}
-        <div className="mb-6 flex flex-wrap gap-4">
-          {/* Search */}
-          <div className="flex-1 min-w-64">
-            <form action="/research" method="get">
-              <input
-                type="text"
-                name="search"
-                defaultValue={searchParams.search}
-                placeholder="Search research..."
-                className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </form>
-          </div>
+        <ResearchFilters allTags={allTags} allTopics={allTopics} />
 
-          {/* Tag Filter */}
-          {allTags.length > 0 && (
-            <div>
-              <select
-                value={searchParams.tag || ''}
-                onChange={(e) => {
-                  const params = new URLSearchParams(searchParams as any)
-                  if (e.target.value) {
-                    params.set('tag', e.target.value)
-                  } else {
-                    params.delete('tag')
-                  }
-                  window.location.href = `/research?${params.toString()}`
-                }}
-                className="block rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="">All tags</option>
-                {allTags.map((tag) => (
-                  <option key={tag} value={tag}>
-                    {tag}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Topic Filter */}
-          {allTopics.length > 0 && (
-            <div>
-              <select
-                value={searchParams.topic || ''}
-                onChange={(e) => {
-                  const params = new URLSearchParams(searchParams as any)
-                  if (e.target.value) {
-                    params.set('topic', e.target.value)
-                  } else {
-                    params.delete('topic')
-                  }
-                  window.location.href = `/research?${params.toString()}`
-                }}
-                className="block rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="">All topics</option>
-                {allTopics.map((topic) => (
-                  <option key={topic} value={topic}>
-                    {topic}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Clear Filters */}
-          {(searchParams.tag || searchParams.topic || searchParams.type || searchParams.search) && (
+        {/* Clear Filters */}
+        {(searchParams.tag || searchParams.topic || searchParams.type || searchParams.search) && (
+          <div className="mb-6">
             <Link
               href="/research"
               className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
             >
               Clear filters
             </Link>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Results Count */}
         <div className="mb-4">

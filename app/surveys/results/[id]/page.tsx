@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getSurveyTemplate } from '@/utils/constants/surveys'
+import SurveyShareSection from '@/components/surveys/survey-share-section'
 
 type PageProps = {
   params: { id: string }
@@ -26,12 +27,13 @@ export default async function SurveyResultsPage({ params }: PageProps) {
       organization_id,
       deployed_by_user_id,
       organization:organizations(name, slug),
-      survey:surveys(id, template_id, title, description, questions, category)
+      survey:surveys(id, template_id, title, description, questions)
     `)
     .eq('id', params.id)
     .single()
 
   if (error || !deployment) {
+    console.error('Error fetching deployment:', error)
     notFound()
   }
 
@@ -65,7 +67,7 @@ export default async function SurveyResultsPage({ params }: PageProps) {
   const { count: responseCount } = await supabase
     .from('survey_responses')
     .select('*', { count: 'exact', head: true })
-    .eq('deployment_id', deployment.id)
+    .eq('survey_deployment_id', deployment.id)
 
   // Get org member count for response rate
   const { count: memberCount } = await supabase
@@ -79,7 +81,10 @@ export default async function SurveyResultsPage({ params }: PageProps) {
   const { data: aggregateStats } = await supabase
     .rpc('get_deployment_aggregate_stats', { deployment_id_param: deployment.id })
 
-  const template = getSurveyTemplate(deployment.survey.template_id)
+  // Get template definition using template_id
+  const template = deployment.survey.template_id
+    ? getSurveyTemplate(deployment.survey.template_id)
+    : null
 
   // Calculate aggregate scores for each metric
   const aggregateMetrics: Record<string, { avg: number; min: number; max: number }> = {}
@@ -90,11 +95,11 @@ export default async function SurveyResultsPage({ params }: PageProps) {
       const { data } = await supabase
         .from('survey_responses')
         .select('scores')
-        .eq('deployment_id', deployment.id)
+        .eq('survey_deployment_id', deployment.id)
 
       if (data && data.length >= 3) {
         const values = data
-          .map(r => r.scores?.[metric])
+          .map((r: any) => r.scores?.[metric])
           .filter((v): v is number => typeof v === 'number')
 
         if (values.length > 0) {
@@ -172,6 +177,14 @@ export default async function SurveyResultsPage({ params }: PageProps) {
             })}</span>
           </div>
         </div>
+
+        {/* Share Survey */}
+        {isOpen && (
+          <SurveyShareSection
+            deploymentId={deployment.id}
+            surveyTitle={deployment.title}
+          />
+        )}
 
         {/* Response Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

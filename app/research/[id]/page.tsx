@@ -99,10 +99,8 @@ export default async function ResearchDetailPage({ params }: PageProps) {
     }
   }
 
-  // Get download URL
-  const { data: { signedUrl } } = await supabase.storage
-    .from('research-documents')
-    .createSignedUrl(document.file_path, 3600) // 1 hour expiry
+  // Use the file URL directly (already stored in database)
+  const downloadUrl = document.file_url
 
   const formatFileSize = (bytes: number | null) => {
     if (!bytes) return 'Unknown size'
@@ -121,9 +119,9 @@ export default async function ResearchDetailPage({ params }: PageProps) {
             <Link href="/research" className="text-sm text-gray-700 hover:text-gray-900">
               ← Research Library
             </Link>
-            {signedUrl && (
+            {downloadUrl && (
               <a
-                href={signedUrl}
+                href={downloadUrl}
                 download={document.file_name}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >

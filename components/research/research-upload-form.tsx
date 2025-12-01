@@ -31,7 +31,7 @@ export default function ResearchUploadForm({ userId, organizations }: Props) {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [selectedTopics, setSelectedTopics] = useState<string[]>([])
   const [researchType, setResearchType] = useState('')
-  const [visibilityLevel, setVisibilityLevel] = useState<'private' | 'network' | 'public'>('network')
+  const [visibilityLevel, setVisibilityLevel] = useState<'private' | 'network'>('network')
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -376,19 +376,6 @@ export default function ResearchUploadForm({ userId, organizations }: Props) {
             <div>
               <span className="text-sm font-medium text-gray-900">Network</span>
               <p className="text-xs text-gray-500">Visible to all organizations in the network</p>
-            </div>
-          </label>
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              value="public"
-              checked={visibilityLevel === 'public'}
-              onChange={(e) => setVisibilityLevel(e.target.value as 'public')}
-              className="border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <div>
-              <span className="text-sm font-medium text-gray-900">Public</span>
-              <p className="text-xs text-gray-500">Visible to everyone, including non-members</p>
             </div>
           </label>
         </div>

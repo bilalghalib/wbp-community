@@ -561,9 +561,21 @@ VALUES (
 
 ### Issue: "Permission denied" on query
 
-**Cause**: RLS policy blocking access
+**Cause**: Missing table-level GRANT permissions (not RLS)
 
-**Solution**: Check membership:
+**Solution**: Grant permissions to authenticated role:
+```sql
+-- This is REQUIRED after running migrations
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
+
+-- Also grant to anon role for public access
+GRANT USAGE ON SCHEMA public TO anon;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;
+```
+
+**Then** check if it's an RLS issue:
 ```sql
 SELECT *
 FROM organization_memberships

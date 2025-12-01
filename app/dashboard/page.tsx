@@ -16,7 +16,7 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
-  const { data: memberships } = await supabase
+  const { data: memberships, error: membershipError } = await supabase
     .from('organization_memberships')
     .select(`
       *,
@@ -24,6 +24,12 @@ export default async function DashboardPage() {
     `)
     .eq('user_id', user.id)
     .eq('is_active', true)
+
+  // DEBUG: Log what we're getting
+  console.log('DEBUG - User ID:', user.id)
+  console.log('DEBUG - User Email:', user.email)
+  console.log('DEBUG - Memberships:', memberships)
+  console.log('DEBUG - Membership Error:', membershipError)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,7 +48,7 @@ export default async function DashboardPage() {
               <form action="/auth/signout" method="post">
                 <button
                   type="submit"
-                  className="text-sm text-gray-700 hover:text-gray-900"
+                  className="text-sm text-gray-700 hover:text-gray-900 hover:underline cursor-pointer"
                 >
                   Sign out
                 </button>

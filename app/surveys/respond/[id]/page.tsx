@@ -25,12 +25,13 @@ export default async function SurveyResponsePage({ params }: PageProps) {
       closes_at,
       organization_id,
       organization:organizations(name, slug),
-      survey:surveys(id, template_id, title, description, questions, category)
+      survey:surveys(id, template_id, title, description, questions)
     `)
     .eq('id', params.id)
     .single()
 
   if (error || !deployment) {
+    console.error('Error fetching deployment:', error)
     notFound()
   }
 

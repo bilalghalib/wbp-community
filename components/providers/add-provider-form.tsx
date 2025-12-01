@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SPECIALTIES, MODALITIES, LANGUAGES } from '@/utils/constants/specialties'
+import PhotoUpload from './photo-upload'
 
 type Organization = {
   id: string
@@ -13,39 +14,42 @@ type Organization = {
 type Props = {
   userId: string
   organizations: Organization[]
+  existingProvider?: any
+  isEditing?: boolean
 }
 
-export default function AddProviderForm({ userId, organizations }: Props) {
+export default function AddProviderForm({ userId, organizations, existingProvider, isEditing = false }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     // Organization making recommendation
-    organizationId: organizations[0]?.id || '',
+    organizationId: existingProvider?.added_by_organization_id || organizations[0]?.id || '',
 
     // Provider details
-    full_name: '',
-    email: '',
-    phone: '',
-    website_url: '',
-    bio: '',
-    specialties: [] as string[],
-    modalities: [] as string[],
-    languages: ['English'] as string[],
+    full_name: existingProvider?.full_name || '',
+    email: existingProvider?.email || '',
+    phone: existingProvider?.phone || '',
+    website_url: existingProvider?.website_url || '',
+    photo_url: existingProvider?.photo_url || '',
+    bio: existingProvider?.bio || '',
+    specialties: existingProvider?.specialties || ([] as string[]),
+    modalities: existingProvider?.modalities || ([] as string[]),
+    languages: existingProvider?.languages || (['English'] as string[]),
 
     // Location
-    location_city: '',
-    location_region: '',
-    location_country: 'United States',
-    timezone: '',
+    location_city: existingProvider?.location_city || '',
+    location_region: existingProvider?.location_region || '',
+    location_country: existingProvider?.location_country || 'United States',
+    timezone: existingProvider?.timezone || '',
 
     // Availability
-    offers_remote: true,
-    offers_in_person: false,
-    is_accepting_clients: true,
+    offers_remote: existingProvider?.offers_remote ?? true,
+    offers_in_person: existingProvider?.offers_in_person ?? false,
+    is_accepting_clients: existingProvider?.is_accepting_clients ?? true,
 
-    // Recommendation details
+    // Recommendation details (not used in edit mode)
     relationship_note: '',
     would_recommend_for: [] as string[],
   })
@@ -65,23 +69,42 @@ export default function AddProviderForm({ userId, organizations }: Props) {
     setError(null)
 
     try {
-      const res = await fetch('/api/service-providers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          userId,
-        }),
-      })
+      if (isEditing && existingProvider) {
+        // Update existing provider
+        const res = await fetch(`/api/service-providers/${existingProvider.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        })
 
-      const data = await res.json()
+        const data = await res.json()
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to add provider')
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to update provider')
+        }
+
+        // Redirect back to provider page
+        router.push(`/service-providers/${existingProvider.id}`)
+      } else {
+        // Create new provider
+        const res = await fetch('/api/service-providers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            userId,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to add provider')
+        }
+
+        // Redirect to the new provider's page
+        router.push(`/service-providers/${data.providerId}`)
       }
-
-      // Redirect to the new provider's page
-      router.push(`/service-providers/${data.providerId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -177,6 +200,12 @@ export default function AddProviderForm({ userId, organizations }: Props) {
               placeholder="https://example.com"
             />
           </div>
+
+          <PhotoUpload
+            currentPhotoUrl={formData.photo_url}
+            onPhotoChange={(url) => setFormData({ ...formData, photo_url: url })}
+            userId={userId}
+          />
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -309,12 +338,13 @@ export default function AddProviderForm({ userId, organizations }: Props) {
         </div>
       </div>
 
-      {/* Recommendation Details */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Your Recommendation</h2>
-        <p className="text-sm text-gray-700 mb-4">
-          Share context about your organization's relationship with this provider. This helps others understand why you're recommending them.
-        </p>
+      {/* Recommendation Details - Only show when creating new provider */}
+      {!isEditing && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">Your Recommendation (Optional)</h2>
+          <p className="text-sm text-gray-700 mb-4">
+            Share context about your organization's relationship with this provider. This helps others understand why you're recommending them.
+          </p>
 
         <div className="space-y-4">
           <div>
@@ -358,6 +388,7 @@ export default function AddProviderForm({ userId, organizations }: Props) {
           </div>
         </div>
       </div>
+      )}
 
       {/* Submit */}
       <div className="flex gap-4">
@@ -373,7 +404,9 @@ export default function AddProviderForm({ userId, organizations }: Props) {
           disabled={loading}
           className="flex-1 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Adding Provider...' : 'Add Provider & Recommendation'}
+          {loading
+            ? (isEditing ? 'Saving...' : 'Adding Provider...')
+            : (isEditing ? 'Save Changes' : 'Add Provider')}
         </button>
       </div>
     </form>

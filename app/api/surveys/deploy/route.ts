@@ -51,11 +51,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if survey template exists in database, create if not
+    // Check if survey template exists in database by template_id, create if not
     let { data: survey } = await supabase
       .from('surveys')
       .select('id')
       .eq('template_id', templateId)
+      .eq('is_active', true)
       .single()
 
     if (!survey) {
@@ -66,7 +67,8 @@ export async function POST(request: NextRequest) {
           title: template.title,
           description: template.description,
           questions: template.questions,
-          category: template.category,
+          scoring_logic: template.aggregateMetrics ? { metrics: template.aggregateMetrics } : null,
+          created_by_user_id: user.id,
         })
         .select('id')
         .single()
@@ -110,8 +112,8 @@ export async function POST(request: NextRequest) {
       details: {
         deployment_id: deployment.id,
         survey_id: survey.id,
-        template_id: templateId,
-        title,
+        survey_title: template.title,
+        deployment_title: title,
         closes_at: closesAt,
       },
     })

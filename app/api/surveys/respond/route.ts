@@ -181,8 +181,8 @@ export async function POST(request: NextRequest) {
     const { data: existingResponse } = await supabase
       .from('survey_responses')
       .select('id')
-      .eq('deployment_id', deploymentId)
-      .eq('user_id', user.id)
+      .eq('survey_deployment_id', deploymentId)
+      .eq('respondent_id', user.id)
       .single()
 
     if (existingResponse) {
@@ -199,8 +199,8 @@ export async function POST(request: NextRequest) {
     const { data: response, error: responseError } = await supabase
       .from('survey_responses')
       .insert({
-        deployment_id: deploymentId,
-        user_id: user.id,
+        survey_deployment_id: deploymentId,
+        respondent_id: user.id,
         answers,
         scores,
       })

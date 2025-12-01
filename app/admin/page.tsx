@@ -255,16 +255,55 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Quick Links */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
             href="/admin/organizations"
             className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
           >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Manage Organizations
-            </h3>
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Organizations
+              </h3>
+            </div>
             <p className="text-sm text-gray-600">
-              View, approve, and manage all organizations in the network
+              View and manage all organizations in the network
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/surveys"
+            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Survey Analytics
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              Network-wide survey deployment and engagement metrics
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/research"
+            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Research Analytics
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              Upload trends, popular topics, and top contributors
             </p>
           </Link>
 
@@ -272,9 +311,14 @@ export default async function AdminDashboardPage() {
             href="/service-providers"
             className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
           >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Service Providers
-            </h3>
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Service Providers
+              </h3>
+            </div>
             <p className="text-sm text-gray-600">
               View and manage all service provider listings
             </p>
@@ -284,11 +328,33 @@ export default async function AdminDashboardPage() {
             href="/admin/activity"
             className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow"
           >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Activity Logs
-            </h3>
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Activity Logs
+              </h3>
+            </div>
             <p className="text-sm text-gray-600">
               View detailed activity logs and audit trail
+            </p>
+          </Link>
+
+          <Link
+            href="/research"
+            className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow border-2 border-dashed border-gray-300"
+          >
+            <div className="flex items-center mb-2">
+              <svg className="h-6 w-6 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Browse Network
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              View research and resources as a network member
             </p>
           </Link>
         </div>
