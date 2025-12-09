@@ -1,0 +1,207 @@
+{
+  "springboard_purpose": "Help organizations quickly discern which practitioners align with their values/approach",
+  "extraction_context": "These questions extract practitioner information for organizational decision-making, NOT for building a social platform",
+  "questions": [
+    {
+      "question": "How does the speaker describe their approach to practicing presence with clients or communities?",
+      "purpose": "Help orgs discern depth of engagement vs surface-level work",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "HIGH",
+      "notes": "Distinguishes 'stops fully to listen' from 'quick check-ins'",
+      "example_answer": "I take time to stop fully and hear what lies beneath someone's usual answer",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "What does the speaker say about sustaining their practice when emotions or circumstances shift?",
+      "purpose": "Identify practitioners who work beyond emotional ups/downs",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "HIGH",
+      "notes": "Helps orgs avoid inspiration-dependent practitioners",
+      "example_answer": "I ground my commitment in what's possible rather than in fluctuating emotions like hope or despair",
+      "source_value_card": "Justin - Commitment Beyond Emotional Weather"
+    },
+    {
+      "question": "What specific methods or techniques does the speaker teach or use in their work?",
+      "purpose": "Provide concrete approaches orgs can evaluate",
+      "maps_to_field": "specific_methods",
+      "pilot_priority": "HIGH",
+      "notes": "Barry's 'half-step back from empathy' - actionable techniques",
+      "example_answer": "I teach the half-step back from empathy to maintain perspective while keeping the heart open",
+      "source_value_card": "Barry - Transforming Rather Than Suppressing"
+    },
+    {
+      "question": "How does the speaker describe attending to power dynamics, structural constraints, or systemic factors?",
+      "purpose": "Surface practitioner awareness of context beyond individual",
+      "maps_to_field": "power_awareness_statement",
+      "pilot_priority": "MEDIUM",
+      "notes": "Rukudzo's economic/social constraints on mental health",
+      "example_answer": "I attend to how economic and social environments shape mental health challenges",
+      "source_value_card": "Deepa - Questioning the 'Should' That Constrains Us"
+    },
+    {
+      "question": "Does the speaker work by delivering services or by co-creating with communities - and how do they describe this?",
+      "purpose": "Clarify service delivery model expectations",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "MEDIUM",
+      "notes": "Yazmany's co-creation vs traditional service delivery",
+      "example_answer": "I invite others to come into my work and make it with me rather than consuming what I've made alone",
+      "source_value_card": "Yazmany - Opening to Be Changed by Others"
+    },
+    {
+      "question": "What does the speaker say distinguishes their approach from more conventional or mainstream practices?",
+      "purpose": "Help orgs understand unique value proposition",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "MEDIUM",
+      "notes": "What makes this practitioner different from others",
+      "example_answer": "I work outside medical frameworks to restore holistic views of human wellbeing",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "How does the speaker describe the difference between surface-level and deep engagement in their work?",
+      "purpose": "Enable orgs to assess depth of practice",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "HIGH",
+      "notes": "Related to presence and sustained commitment",
+      "example_answer": "Surface engagement is saying 'hi how are you' while walking away; deep engagement is stopping to actually hear the response",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "What does the speaker say about boundaries, limitations, or what they don't do in their practice?",
+      "purpose": "Set realistic expectations and prevent burnout",
+      "maps_to_field": "boundaries_statement",
+      "pilot_priority": "HIGH",
+      "notes": "Rukudzo's work/life boundaries, what they explicitly don't offer",
+      "example_answer": "I don't work Saturdays because I give that time to my children - I practice the boundaries I prescribe to others",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "What traditions, frameworks, or disciplines outside their primary field inform the speaker's work?",
+      "purpose": "Reveal holistic/integrative approaches",
+      "maps_to_field": "disciplines_and_frameworks",
+      "pilot_priority": "MEDIUM",
+      "notes": "Psychiatrist informed by constellation therapy, etc.",
+      "example_answer": "Beyond medical psychiatry, I'm informed by constellation therapy and spiritual wellbeing practices",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "How does the speaker describe what makes a referral or connection trustworthy?",
+      "purpose": "Understand practitioner's own discernment criteria",
+      "maps_to_field": "trust_criteria",
+      "pilot_priority": "LOW",
+      "notes": "Meta-level: how they themselves evaluate connections",
+      "example_answer": "Trust comes from seeing someone's actual practice, not just their credentials",
+      "source_value_card": "Multiple"
+    },
+    {
+      "question": "What does the speaker say about transformation versus information in their work?",
+      "purpose": "Distinguish change-oriented from knowledge-delivery approaches",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "MEDIUM",
+      "notes": "Justin's inner transformation preventing pattern repetition",
+      "example_answer": "I focus on inner transformation so people don't recreate the same external patterns",
+      "source_value_card": "Justin - Commitment Beyond Emotional Weather"
+    },
+    {
+      "question": "How does the speaker talk about empathy versus compassion or other distinctions in care approaches?",
+      "purpose": "Clarify sustainability of their approach",
+      "maps_to_field": "specific_methods",
+      "pilot_priority": "MEDIUM",
+      "notes": "Barry's empathy (burnout) vs compassion (sustainable)",
+      "example_answer": "Empathy creates burnout because you take on others' pain; compassion maintains the half-step back",
+      "source_value_card": "Barry - Transforming Rather Than Suppressing"
+    },
+    {
+      "question": "What does the speaker identify as common blocks or challenges in wellbeing work?",
+      "purpose": "Surface awareness of field-wide issues",
+      "maps_to_field": "field_awareness",
+      "pilot_priority": "LOW",
+      "notes": "Context for their approach and shared challenges",
+      "example_answer": "A common challenge is medicalizing everything and forgetting people's spiritual and social components",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    },
+    {
+      "question": "How does the speaker describe collective or community-level work versus individual support?",
+      "purpose": "Identify group/systems orientation",
+      "maps_to_field": "how_i_practice",
+      "pilot_priority": "MEDIUM",
+      "notes": "Deepa's collective power vs individual therapy model",
+      "example_answer": "Collective power goes way beyond what individuals can do alone",
+      "source_value_card": "Deepa - Questioning the 'Should' That Constrains Us"
+    },
+    {
+      "question": "What does the speaker say about their own wellbeing practices or how they care for themselves?",
+      "purpose": "Assess practitioner sustainability and modeling",
+      "maps_to_field": "self_care_practices",
+      "pilot_priority": "LOW",
+      "notes": "Do they practice what they teach - important for trust",
+      "example_answer": "I take the same prescription I give to others - holistic self-care and boundaries",
+      "source_value_card": "Rukudzo - True Presence Beyond Medical Distance"
+    }
+  ],
+  "database_schema_mapping": {
+    "how_i_practice": {
+      "type": "rich_text",
+      "max_length": 2000,
+      "description": "Free-form description of how practitioner shows up in their work"
+    },
+    "specific_methods": {
+      "type": "array_of_strings",
+      "description": "List of concrete techniques/methods they teach"
+    },
+    "power_awareness_statement": {
+      "type": "text",
+      "max_length": 500,
+      "optional": true,
+      "description": "How they attend to structural/systemic factors"
+    },
+    "boundaries_statement": {
+      "type": "text",
+      "max_length": 500,
+      "description": "What they don't do, limitations, boundaries"
+    },
+    "disciplines_and_frameworks": {
+      "type": "array_of_strings",
+      "description": "Traditions/frameworks beyond primary discipline"
+    },
+    "trust_criteria": {
+      "type": "text",
+      "max_length": 500,
+      "optional": true,
+      "description": "How they themselves evaluate quality connections"
+    },
+    "field_awareness": {
+      "type": "text",
+      "max_length": 500,
+      "optional": true,
+      "description": "Understanding of common challenges in the field"
+    },
+    "self_care_practices": {
+      "type": "text",
+      "max_length": 500,
+      "optional": true,
+      "description": "How they maintain their own wellbeing"
+    }
+  },
+  "pilot_scope": {
+    "high_priority_fields": [
+      "how_i_practice",
+      "specific_methods",
+      "boundaries_statement"
+    ],
+    "medium_priority_fields": [
+      "power_awareness_statement",
+      "disciplines_and_frameworks"
+    ],
+    "low_priority_fields": [
+      "trust_criteria",
+      "field_awareness",
+      "self_care_practices"
+    ]
+  },
+  "extraction_notes": {
+    "organizational_context": "These profiles help organizations discern practitioner fit - not for community building or social engagement",
+    "use_once_model": "Springboard concept - org logs in, finds what they need, leaves. Not ongoing engagement.",
+    "privacy_model": "All behind organizational login. Protect practitioners and orgs from surveillance.",
+    "no_social_features": "No ratings, no comments, no messaging. Contact happens externally via email/website."
+  }
+}

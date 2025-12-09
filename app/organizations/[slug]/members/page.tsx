@@ -118,7 +118,7 @@ export default async function MembersPage({
             </div>
             <div>
               <dt className="font-medium text-blue-900">Contributor</dt>
-              <dd className="text-blue-700">Can add service providers, upload research, deploy surveys</dd>
+              <dd className="text-blue-700">Can add service providers, upload resources, deploy surveys</dd>
             </div>
             <div>
               <dt className="font-medium text-blue-900">Viewer</dt>

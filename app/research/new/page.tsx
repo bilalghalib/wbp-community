@@ -25,10 +25,10 @@ export default async function NewResearchPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Restricted</h1>
           <p className="mt-2 text-gray-600">
-            You must be a contributor or admin in an organization to upload research.
+            You must be a contributor or admin in an organization to upload resources.
           </p>
           <Link href="/research" className="mt-4 inline-block text-blue-600 hover:text-blue-500">
-            Return to Research Library
+              Return to Resources
           </Link>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default async function NewResearchPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center">
             <Link href="/research" className="text-sm text-gray-700 hover:text-gray-900">
-              ← Research Library
+              ← Resources
             </Link>
           </div>
         </div>
@@ -49,9 +49,9 @@ export default async function NewResearchPage() {
 
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Upload Research</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Upload Resource</h1>
           <p className="mt-2 text-gray-600">
-            Share research, reports, or resources with the network
+            Share resources, reports, or documents with the network
           </p>
         </div>
 

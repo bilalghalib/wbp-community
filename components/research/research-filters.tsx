@@ -13,6 +13,7 @@ export default function ResearchFilters({ allTags, allTopics }: ResearchFiltersP
 
   const currentTag = searchParams.get('tag') || ''
   const currentTopic = searchParams.get('topic') || ''
+  const currentType = searchParams.get('type') || ''
   const currentSearch = searchParams.get('search') || ''
 
   const updateFilter = (key: string, value: string) => {
@@ -34,7 +35,7 @@ export default function ResearchFilters({ allTags, allTopics }: ResearchFiltersP
             type="text"
             name="search"
             defaultValue={currentSearch}
-            placeholder="Search research..."
+            placeholder="Search resources..."
             className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </form>
@@ -75,6 +76,19 @@ export default function ResearchFilters({ allTags, allTopics }: ResearchFiltersP
           </select>
         </div>
       )}
+
+      {/* Type Filter */}
+      <div>
+        <select
+          value={currentType}
+          onChange={(e) => updateFilter('type', e.target.value)}
+          className="block rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All types</option>
+          <option value="Research">Research</option>
+          <option value="Workshops">Workshops</option>
+        </select>
+      </div>
     </div>
   )
 }

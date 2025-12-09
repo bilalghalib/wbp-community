@@ -1,0 +1,679 @@
+### Springboard Registry Pilot
+- The team aims to pilot a registry concept framed as a "springboard"—not a platform—so organizations can jump into higher-impact work with vetted coaches, therapists, and researchers.
+- Plan a lean pilot: start with about 10 organizations, then scale to 30; deploy a validated survey to build a sector baseline and capture who’s in the network.
+- They’ve been offered heavyweight India ID infrastructure but want something simpler, safer, and suitable for a pilot while still secure.
+- Three use cases: (1) gather and share research, (2) provide a deployable survey tool for baseline data, (3) establish a registry of high-quality needs/services. They want to align with Richie’s work and reuse a common baseline.
+- Long-term goal is to create a testable, test-friendly system that can evolve into richer capabilities without becoming a full platform.
+
+### Security, Privacy, and Data Governance
+- Key risks: government actors, burnout data, and sensitive information about individuals and organizations; risk of exposing identities or well-being data.
+- Proposed model: log in as an organization, not as an individual; front-end visibility limited to protect people; back-end admins can manage access; potential for a delegation mechanism to maintain continuity.
+- Emphasis on encryption, access controls, and hardening; consideration of worst-case scenarios and privacy-preserving designs; guard against screenshots and data leakage.
+- Discussion of layered access: internal admin views vs. external visibility; potential for personal coach profiles but with restricted exposure; data should remain protected and accessible only to authorized stakeholders.
+
+### Tools, AI, and Usability
+- explored Retrieval-Augmented Generation (RAG) to answer questions with citations from source data (PDFs, research); not a full social network, but a smart search/research aid.
+- Early AI ideas included an embedded bot for resources; concern about turning the platform into a chat-first environment; aim to keep AI as a search/assistive tool rather than a social feature.
+- Vision for AI to help navigate research, link to sources, and possibly extract structured data from conversations to inform profiles, while preserving user control and privacy.
+- Plan to keep the pilot simple (lean feature set) and avoid over-scoping; ensure the platform remains a knowledge/resource hub with careful integration of AI.
+
+### Usability, Product Scope, and Budget
+- Usability: need a modern, user-friendly interface; avoid the drawbacks of older interfaces by starting from fresh tech stacks (e.g., Tailwind) to improve UX.
+- Pilot scope: start with 10 organizations, then 30; test value quickly and iterate; avoid turning the pilot into a heavy platform with advanced but unused features.
+- Data and collaboration: decide whether to keep sharing within the platform or enable external contact to coaches; evaluate whether on-platform booking is needed or if connections can happen outside.
+- Budget and roles: speakers seek clarity on budget and want paid involvement; non-profit compensation discussed; exploring a staged, sustainable model (possibly a membership/cooperative or revenue-sharing structure) to support ongoing community work.
+- Organization vs individual access: initial login would be organization-based; coaches/experts may have profiles later; privacy between organizations maintained; back-end controls allow governance without exposing all individuals.
+
+### Personal Context, Timeline, and Next Steps
+- Personal notes: participants share family updates (baby, nunu), and mention Mexico City and Paris time zones; light, human timing details among colleagues.
+- Timeline and coordination: need to confirm budget/timeframe with Aaron; decide whether to start with 10 or 30 organizations; plan follow-ups and possibly focus-group sessions to discuss risk, governance, and failure points.
+- Future direction: the speaker envisions a broader, self-sustaining community (not just a one-off project) with potential paid共同 support and a tiered offering (wellbeing practices, conversations, networking) and even a cooperative investment vehicle for social enterprises.
+- Final tone: optimistic about feedback, acknowledging the complexity and needing clear boundaries (“no platform as a social network,” “no direct cross-organization messaging”); intent to stay engaged and iterate.
+transcript of entire conversation: 
+[[[00:04 Speaker A: Hey, Bilal.
+00:05 Speaker B: Hi, Habibis.
+00:10 Speaker A: Hey, Ali.
+00:11 Speaker C: Hi, guys.
+00:12 Speaker C: How are you?
+00:14 Speaker B: I'm doing good.
+00:16 Speaker B: I'm.
+00:17 Speaker B: Yeah.
+00:18 Speaker B: Just brought the baby back home from the nunu.
+00:21 Speaker B: He's active.
+00:26 Speaker A: I love how you say that with such an Arabic accent, by the way, because, like, it's not a French way of saying nunu, but, like, yours is, like, the Arabic version.
+00:32 Speaker A: It's very cool.
+00:34 Speaker B: El nuno.
+00:35 Speaker B: El nuno.
+00:36 Speaker B: How is it Frenchified.
+00:39 Speaker A: Now?
+00:40 Speaker A: Like, I've got both swirling in my head.
+00:41 Speaker A: Let's let it go.
+00:42 Speaker A: But it was just interesting hearing, like, the big thing.
+00:45 Speaker A: Very cool.
+00:46 Speaker B: How old are you guys?
+00:48 Speaker B: We're early in Mexico, I'm assuming.
+00:50 Speaker B: Or.
+00:54 Speaker C: No, it's midday.
+00:55 Speaker C: Almost 12 in Mexico, so my day has fully started.
+01:01 Speaker C: I feel kind of tired right now, but good.
+01:06 Speaker C: I'm doing good.
+01:11 Speaker B: And you are?
+01:12 Speaker A: I'm doing well.
+01:13 Speaker A: It's closer to the end of the day here in Paris.
+01:16 Speaker A: It's very dark.
+01:17 Speaker A: Like, I think it's probably as dark as it is where you are.
+01:21 Speaker A: And it's Friday, and I'm looking forward to, like, closing things up.
+01:25 Speaker A: I have one more call after this, and then it's the weekend, and I'm excited about that.
+01:32 Speaker A: So I'm in.
+01:36 Speaker A: Bilal, do you want to check on in?
+01:38 Speaker B: Yeah.
+01:39 Speaker B: So, yeah, I'm feeling a little, like, excited, a little wired and in need of grounding, but also, yeah, happy to.
+01:55 Speaker B: To find a way of, like, taking that energy and hopefully moving into the conversation in a generative way.
+02:01 Speaker B: And, yeah, just a little bit excited, but needing maybe at least one deep breath.
+02:08 Speaker B: Alhamdulillah.
+02:10 Speaker A: I love how you said that with maniacal laughter.
+02:12 Speaker A: Fantastic.
+02:13 Speaker B: At least one deep.
+02:14 Speaker A: At least one deep breath.
+02:16 Speaker A: Let me see if I can take us into this conversation.
+02:19 Speaker A: I know we have a short time today.
+02:20 Speaker A: I apologize for that.
+02:21 Speaker A: It's just been a bit tighter than usual.
+02:24 Speaker A: But, Bilal, we're in a place where we're trying to find a way that we can have a little pilot put together of this registry project that we've been thinking about.
+02:35 Speaker A: We're still trying to find a word for it, like, a unique word for it.
+02:39 Speaker A: I think you had one which was like, springboard.
+02:44 Speaker A: Bilal thought that Ali could work as an interesting way of describing what we're doing.
+02:49 Speaker A: It's not a platform.
+02:50 Speaker A: It's a springboard.
+02:51 Speaker A: You come there so you can spring off and do something else better.
+02:57 Speaker A: But we want to kind of put together a pilot.
+03:00 Speaker A: We've been offered technology by these people that had designed and put in place the infrastructure for India ID system, like for a billion people for registry in that case, which you can imagine is pretty hardcore technology.
+03:14 Speaker A: We don't need something like that big and insane, even though they're making it available for free.
+03:20 Speaker A: We need something that's much more down to earth.
+03:22 Speaker A: But the reality is we also need something that's safe and secure because the kind of people that are tuning into this are people that sometimes don't want people to know they're tuning into those kinds of things that are sharing information that they don't want to share.
+03:34 Speaker A: So eventually we're going to need a secure system.
+03:36 Speaker A: And so this can't just be like, you know, you're off the shelf kind of thing.
+03:40 Speaker A: But for a pilot, maybe we can start and come up with something that allows us to test.
+03:45 Speaker A: If we send out a survey to 30 organizations and ask them for specific information and it becomes their price of entry into the network and they all share the names of coaches and therapists.
+03:55 Speaker A: Like, does that start to build up a reservoir?
+03:57 Speaker A: Like, how would we design it?
+03:58 Speaker A: How would they use it?
+04:00 Speaker A: What needs to be there in place for that?
+04:01 Speaker A: Like, if we ask about research they've done, can they share that research so that way we can actually track and maybe some of it can be shared publicly or within the group at least.
+04:12 Speaker A: Are there like, Is there like we have a survey tool?
+04:15 Speaker A: Can we help them deploy that tool?
+04:17 Speaker A: Like, you know, like these are sort of like three use cases that I think that we've been thinking about.
+04:22 Speaker A: And so can we are like gathering.
+04:25 Speaker B: People'S research that they're already doing with their communities, conducting our research with the work that you were describing that you're working on with Richie essentially and deploying that.
+04:37 Speaker B: And then the registry for needs services offers things that they know are high quality.
+04:44 Speaker B: So were those the three?
+04:46 Speaker A: Yeah, the, the research that we're doing.
+04:48 Speaker A: It's more like they want, like everyone keeps asking us for a survey tool that they can deploy that that will be validated.
+04:56 Speaker B: Yeah.
+04:57 Speaker A: And so we want to like make available a survey tool that they can fill out that can then be compared to a baseline with the rest of the sector.
+05:05 Speaker A: So that's kind of the idea.
+05:07 Speaker A: But somehow we were able to give them a tool they can deploy it.
+05:09 Speaker A: Say like, here's a link.
+05:10 Speaker A: It gives them like something that is helpful for them, but also contributes to a larger pool of data.
+05:16 Speaker A: So we can start to develop a baseline for the sector.
+05:18 Speaker C: Too different from Richie's state of Obeam report.
+05:24 Speaker A: Maybe the two, like, one creates the baseline for the other.
+05:28 Speaker A: Maybe when we like, maybe we use the same survey that we develop with Ritchie and that's the survey that we deploy, that we make available.
+05:35 Speaker A: And then people can just keep comparing it to an evolving baseline that we have for the field through our platform.
+05:47 Speaker B: So short period of time and so many questions.
+05:50 Speaker B: But in terms of security and like risks, when you mean it needs to be secure, do you mean it needs a login?
+05:57 Speaker B: Or do you mean it needs to be hardened?
+05:59 Speaker B: Like hiring white hat hackers to try to break in?
+06:03 Speaker B: Like, what kind of security risks are you imagining?
+06:07 Speaker B: And just generally like, what are you looking for in terms of.
+06:10 Speaker B: At least for the pilot, I know you could, you could take it as far as you want.
+06:15 Speaker B: Like, do you want it like PGP key encrypted, we know exactly who sent what, or do you just want it to have logins basically, or you're muted?
+06:26 Speaker A: I think there are two things that I feel concerned about.
+06:28 Speaker A: One is there are people working on the front lines of a lot of different things.
+06:32 Speaker A: There are state actors and other actors who want to know who they are and information about them.
+06:39 Speaker A: Information that they might be sharing or that their organizations might have shared about burnout.
+06:46 Speaker A: If a government actor knows that a body that they're really worried about is completely burned out, they might not worry as much because they're like, these people are on the point of like breaking down anyways.
+06:56 Speaker A: There's data like this that could be used like at an organizational level.
+07:00 Speaker A: There's data like that about individuals sharing who they might be working with personally as a coach that they might recommend.
+07:06 Speaker A: That could create risk for them.
+07:09 Speaker A: At an individual or organizational level, there's another risk which is a systemic risk for this movement.
+07:15 Speaker A: If they have a cluster where they can see literally in one place all the actors that are leading this, that's a risk as well.
+07:23 Speaker A: So what I mean by this is hardened because we don't want any of that to become easily like taken by a government and absolutely everybody in the.
+07:34 Speaker B: Ecosystem to not take screenshots or download, you know, things and share them.
+07:41 Speaker B: And it makes it like there's a big community to have to trust.
+07:46 Speaker B: Yeah, absolutely everyone.
+07:47 Speaker A: No.
+07:47 Speaker A: And yeah.
+07:48 Speaker A: And I think there's a part there where at some basic level there's trust, but there's information.
+07:54 Speaker A: No one should normally be able to get access to another organization's well being reports, but a government act get that.
+08:02 Speaker A: Or being able to see the identities of the people who represent each organization.
+08:06 Speaker A: Normally what I'm thinking about with the registry is that you get a login as an organization, but you're not logging in as an individual, you're logging in as an organization.
+08:15 Speaker A: So that way it should not be that visible who the people are, except if you can access the information behind it to see who that is.
+08:25 Speaker A: Right.
+08:26 Speaker A: Like there's a bunch of stuff like that where.
+08:30 Speaker A: But that might be for a second round.
+08:32 Speaker A: Bilal.
+08:33 Speaker B: Yeah, the first like just thinking about logging in as an organization but also wanting to have a personal profile where people are recommending.
+08:41 Speaker B: And then we were talking about the importance of being able to meet and connect and like know someone and know that this was referred by someone and that information kind of goes against like this process that you described.
+08:52 Speaker A: Well, it could be a coach or a therapist recommended by an organization.
+08:56 Speaker A: Right.
+08:56 Speaker A: Someone that an organization has worked with.
+08:59 Speaker A: Now let's go with simple.
+09:01 Speaker A: In the first scenario, let's say simple is like a pilot of 30 organizations.
+09:05 Speaker A: Yeah.
+09:06 Speaker B: Keep it.
+09:06 Speaker A: Everyone's okay and everyone's okay with information being shared.
+09:11 Speaker A: Let's take it as a bit of a garden to experiment with and say like, what would this look like if it was working?
+09:17 Speaker B: I didn't think about a lot of these challenges because a lot of the.
+09:20 Speaker B: I had some really silly ideas including, you know, you don't actually fill in your own survey.
+09:27 Speaker B: Everything is done through like a peer process so that there's relationships being forged.
+09:31 Speaker B: I've been, I was trying to think about like the values about anyway, so a lot of these things are going to get thrown out the window once I'm.
+09:38 Speaker B: I learn more about the, the vision.
+09:40 Speaker B: So I'm glad you're sharing some of these things.
+09:42 Speaker B: I'm curious.
+09:43 Speaker B: We don't have a lot of time but ale, like, what are your thoughts on what Aaron is sharing and your hopes for what this thing can be?
+09:53 Speaker B: I'm curious.
+09:58 Speaker C: I wish this pilot, I think like something that happened with the other developers we were trying to launch this with was that the interface was not as user friendly, was very like old.
+10:15 Speaker C: And so my worry was that during the pilot the users would get stuck in that the interface was not easy to use.
+10:22 Speaker C: Instead of really testing what we want to test that the platform is a good resource for them.
+10:29 Speaker C: No, a valuable resource.
+10:31 Speaker C: So I would say that's something to consider too.
+10:33 Speaker C: And I know that for a pilot you cannot invest as much because it's a pilot.
+10:37 Speaker C: But then how do we do it?
+10:38 Speaker C: The other one was like really, really old.
+10:40 Speaker A: Yeah.
+10:41 Speaker B: When you say valuable resource, how does it feel for someone using the resource?
+10:45 Speaker B: Or like what are they getting access to.
+10:51 Speaker C: Information contacts, like information that they know is backed up by someone else.
+10:57 Speaker C: Because someone else in the community put it there?
+10:58 Speaker C: No, because it was valuable for them.
+11:00 Speaker C: And then contacts where therapists, coaches, other people have already worked with to make it easy to gain access to this network of coaches and information.
+11:13 Speaker B: So I keep hearing this idea of the network of coaches and Aaron has mentioned before that this is a very common request.
+11:19 Speaker B: What's the second most common request that you're hoping that this platform can facilitate?
+11:30 Speaker B: Beyond therapists, I don't know where the.
+11:31 Speaker C: First one is, the coaches, but access to information like the research articles, courses, that repository of information.
+11:45 Speaker B: Is there anything about like a calendar of events or activities or anything like that?
+11:50 Speaker B: I, I know we're expecting people to fill it in once, but maybe they have, you know, their yearly event that they want people to know about or something.
+11:56 Speaker B: Is that something that might be helpful?
+12:00 Speaker A: I think, I think it might be interesting with some of the organizations to ask them if they have specific offerings for change makers well being that are open to a broader group and that might be more a quarterly update thing that we ask them like.
+12:14 Speaker A: So there's like a Big Year survey and there's a small survey that.
+12:17 Speaker A: That's a really cool question.
+12:20 Speaker B: I was wondering about this like seasonal connection.
+12:23 Speaker B: I was thinking about, you know, a yearly onboarding and I was wondering did you want that to be connected to any moment for the organization?
+12:31 Speaker B: Like connected to the heart summit perhaps or like the big event?
+12:35 Speaker B: Or do you have a vision for the soft launch and then when you want might want to like launch it more publicly?
+12:41 Speaker B: Do you have a date for that?
+12:45 Speaker A: I think we need to first do a pilot, see what we learn and experiment.
+12:50 Speaker A: I think once we've experimented then we can think about this as a bit of a broader thing.
+12:55 Speaker A: But I think there's a part here where I think the word springboard is important because like that sort of design of a springboard is something very.
+13:03 Speaker A: It's relatively simple but the impact is big.
+13:07 Speaker A: And it's one time access right until you climb up and go back up because you want to really do something again.
+13:13 Speaker A: And so it's not a platform.
+13:15 Speaker A: And so let's, let's discover.
+13:19 Speaker A: I think that's the place that I'm at right now.
+13:21 Speaker A: Instead of going saying let's go like fast big, let's pilot.
+13:25 Speaker A: And Maybe it's even 10 organizations that we know are the 10 most likely organizations that are willing to collaborate with us, then we do 30 and see what like we get from there.
+13:36 Speaker B: And this Might not even like be relevant for a while.
+13:41 Speaker B: But with the.
+13:43 Speaker B: There's the research sharing, which can be a generic kind of sharing thing with the tagging or whatever, but like sharing PDFs, sharing documents and we want people to share their research.
+13:55 Speaker B: There's the conducting the research with an assessment, but there's the possibility of designing the tool to be able to conduct assessments.
+14:05 Speaker B: So maybe V1 of Richie's thing.
+14:08 Speaker B: Or do you want people to be able to actually create like lists of questions with likert scales or choosing scales and actually be able to conduct the research through the platform itself itself, or is that taking it too far and making it something that it shouldn't be?
+14:22 Speaker A: Let's find out.
+14:23 Speaker A: I think for now let's start simple and then let's iterate from there.
+14:26 Speaker A: Right.
+14:27 Speaker A: Like, I think the thing is like once we see how people tune in, like how we can make this something that people are responsive to and where there's value that's being created, like a springboard's value is really, really clear.
+14:38 Speaker A: I like, I think we want to avoid this being a platform, I think we want to avoid this being an iPhone.
+14:43 Speaker A: But like where it's clearly like the community creating value for itself.
+14:47 Speaker B: Yeah.
+14:48 Speaker A: That the community can tap into whenever they need.
+14:50 Speaker B: The last question, I mean I have actually a big list, but the last question for our time together right now.
+14:56 Speaker A: Is do you guys want to, do you guys want to continue?
+15:01 Speaker A: Because you guys can absolutely continue as well.
+15:04 Speaker B: I need to feed the baby and stuff too.
+15:06 Speaker B: Like Joe's there and she's by herself right now.
+15:09 Speaker B: But the question is about security and do we want to give people the option to share more or less publicly and just give people this gradation or should we try to make it as thinking for people about risks that they're not aware about and making it more closed?
+15:26 Speaker A: Thinking about it for people I think will be the kind of way to go with this.
+15:32 Speaker B: Okay.
+15:33 Speaker B: Yeah.
+15:34 Speaker B: And Ale, if you have any like thoughts or you know, you were mentioning the importance of the, the usability and making it look modern, thankfully that is hopefully going to be easier.
+15:50 Speaker B: Like I starting fresh means that we can start with like a bunch of very modern tool stacks that will, you know, create very common tropes for user experience that are very well known and validated.
+16:08 Speaker B: Like the team that you guys were working with probably built everything about their UI and their UX processes and so it looks old but thankfully starting from scratch means that we can leverage a lot of modern day best practices tailwind, like just things that you don't have to think about anymore.
+16:25 Speaker B: But beyond the usability, I'm curious.
+16:29 Speaker B: Aaron, you can head out.
+16:30 Speaker B: I know you have your next meeting.
+16:32 Speaker A: But I'm a little concerned about the link.
+16:35 Speaker A: Ali, do you have a link that you could share with Bilal?
+16:38 Speaker B: A link?
+16:39 Speaker B: Oh, this Zoom link.
+16:41 Speaker A: I see.
+16:42 Speaker A: Yeah.
+16:42 Speaker A: Because I'm supposed to open another call.
+16:43 Speaker A: I don't want you guys to disappear, so.
+16:50 Speaker B: Yeah.
+16:51 Speaker B: All right, I'll hop on there and hopefully I'll get just like to hear a little bit more from you of some of the challenges that you saw, some of the things that you'd be like.
+16:58 Speaker B: It'll be so cool if you.
+16:59 Speaker B: And then we'll take it from there.
+17:01 Speaker B: Inshallah.
+17:01 Speaker B: Yallah, yallah.
+17:02 Speaker B: Aaron, I'll be on the Zoom.
+17:07 Speaker B: This other Zoom here.
+17:09 Speaker B: How do we go here?
+17:29 Speaker B: All right.
+17:32 Speaker A: Yeah.
+17:33 Speaker C: There's something that came to mind that I didn't mention.
+17:36 Speaker C: We didn't mention in this chat.
+17:37 Speaker C: We were also evaluating an AI component.
+17:41 Speaker B: Yeah.
+17:42 Speaker C: In the beginning, it was an AI bot bed with resources on, well, being for social change.
+17:52 Speaker C: And then you could ask questions to it.
+17:55 Speaker C: And then the idea was, why isn't this bot, like, embedded to the platform as a supporter or maybe, maybe even in the search bar so that it can answer your questions.
+18:07 Speaker C: If you.
+18:09 Speaker C: About this topic.
+18:10 Speaker C: Here are these coaches, these resources.
+18:13 Speaker C: We even launched this survey.
+18:14 Speaker C: I don't know, like, you get all the answers.
+18:17 Speaker B: Yeah.
+18:18 Speaker B: So I've been actually working with something called rag retrievement, augmented generation.
+18:27 Speaker B: Basically, you give it your source material and then instead of just having an AI talking to a black box, it's talking to the data, and then it can actually bring in direct links and references to the data set.
+18:46 Speaker B: So if the data set has coaches and things like that, you can say, where are the coaches that are in North Carolina?
+18:52 Speaker B: And if there are any, reference them and link them.
+18:55 Speaker B: So it's like aiding the search.
+19:00 Speaker B: I did talk with Aaron a little bit about AI because in terms of usability, I'm developing systems for extracting structured data from conversations with probability measures.
+19:14 Speaker B: So instead of having people go and fill in like this and fill in that very much like me, not like me, or, you know, this is where I live.
+19:22 Speaker B: It would just talk and.
+19:24 Speaker B: Or they would.
+19:24 Speaker B: I was thinking, like, how cool would it be if this thing was a reflective moment?
+19:28 Speaker B: You know, we've done so many of our processes together where we're journaling for a while.
+19:33 Speaker B: Right.
+19:33 Speaker B: And we talked about, like, where we see ourselves in the future.
+19:36 Speaker B: And then we like, what if we Actually use that stuff and then with their validation.
+19:42 Speaker B: Right.
+19:43 Speaker B: Structure it and say, we're going to fill in your user profile.
+19:46 Speaker B: Here's the information we're able to extract.
+19:49 Speaker B: Do you want to edit it?
+19:51 Speaker B: Keep keeping your own words, but just like chopping it up and then filling in the profile before they hit submit.
+19:57 Speaker B: So it's not like they have to sit and then become a machine to talk to a machine, which is what forms require.
+20:03 Speaker B: But Aaron didn't recommend that so much.
+20:05 Speaker B: He was.
+20:05 Speaker B: For some reason I had some concerns.
+20:08 Speaker B: So I kind of put the AI stuff to the side.
+20:11 Speaker B: But I think the AI as a search is, is.
+20:14 Speaker B: Is good.
+20:16 Speaker B: Even though filters are probably just as good.
+20:18 Speaker B: Like there's a.
+20:19 Speaker B: There's a question of like, what is the real utility, you know, versus, like just if it was structured data, well represented inside, you could just say North Carolina, you know, referenced by this organization, you know, by two filters and they just use databases.
+20:36 Speaker B: There's.
+20:37 Speaker B: I'm not sure what the benefit of the AI would be if it's just using the search.
+20:43 Speaker B: If it's about, like conversation, it might be interesting.
+20:47 Speaker B: Here's where it could get actually really interesting.
+20:49 Speaker B: Not for the search, not for the directory, but for the research.
+20:52 Speaker B: We have all these PDFs that have been generated over the years.
+20:57 Speaker B: And how do you know what part is interesting for you?
+21:01 Speaker B: Like what if you have a question?
+21:04 Speaker B: And that could be really interesting to create a rag retrievement augmented generation.
+21:10 Speaker B: Because instead of just giving you an answer and then you having to trust this AI, it says, well, here's the answer and then here's the reference.
+21:17 Speaker B: It's on page four of this PDF.
+21:19 Speaker B: And then you can actually like navigate deep into the research rather than needing to read the whole thing or it would tell you where to go, basically.
+21:28 Speaker B: So that would be something pretty cool.
+21:30 Speaker B: It does turn the app into something more.
+21:32 Speaker B: Right.
+21:33 Speaker B: It's.
+21:33 Speaker B: It's not just a directory now, so we would need to think about what is it really.
+21:38 Speaker C: And I think like we started calling it Registry, but in the end we don't want it to be a directory of the people using it.
+21:46 Speaker C: It might be a directory of coaches, but.
+21:52 Speaker C: Yeah, and another thing that's come up is like, we really want to be careful that this is not another social network.
+22:00 Speaker C: We don't want that in chat, like between users or.
+22:04 Speaker B: Yeah, yeah, but do you want people to be able to connect with each other, like find their email addresses or.
+22:12 Speaker C: No, no, just connect to the coaches.
+22:15 Speaker B: Interesting.
+22:19 Speaker B: Yeah, so that, that's a little, you know, a Little different than I was thinking, because at least when I was talking with Aaron, I thought, you know, part of it was being able to know who shared.
+22:30 Speaker B: But I'm seeing even more now.
+22:31 Speaker B: It's like organizations that are, you know, have people inside of it that are sharing, but we're obscuring through a layer of organization.
+22:46 Speaker C: And then there might be users who are coaches or experts on things, and they want to put their profiles up and provide that support.
+22:57 Speaker C: So there can be the case where a user is also on the platform as a.
+23:01 Speaker C: As an expert.
+23:02 Speaker B: That's interesting.
+23:03 Speaker B: So maybe the service providers.
+23:07 Speaker B: Basically, when somebody recommends somebody, there's a service provider profile produced, like, in the system that someone could then log into.
+23:21 Speaker B: Right.
+23:22 Speaker B: And they could connect it with their actual email and all that, and they can actually find bookings or connect with people, but only they would have a user profile.
+23:31 Speaker B: Everyone else has an organizational profile logged in with their user, but they're kind of inside of this cluster of organization.
+23:41 Speaker C: So I think that's something we need to test, too.
+23:44 Speaker C: Like, is it enough just to find the information of the coach here and then you reach out to them.
+23:49 Speaker C: Them separately, like outside of the platform, or does it need to be in the platform?
+23:55 Speaker C: It was something we talked with the guys in India about, too, because the model, like, it was a white label of something they had.
+24:02 Speaker C: And what the software that they were offering encouraged users to book the session with coaches in the platform.
+24:11 Speaker C: And then it did become like a social network.
+24:13 Speaker C: And they were chatting, and then the thing of payments came up.
+24:17 Speaker B: And so these are things that you don't want.
+24:20 Speaker B: You don't want people to be discussing and negotiating or anything like that.
+24:26 Speaker C: No.
+24:26 Speaker C: And we're not processing payments either.
+24:30 Speaker B: Okay.
+24:31 Speaker B: It's interesting because it is like a. I think it needs some more definition.
+24:37 Speaker B: It's still me, too, because.
+24:40 Speaker C: Because this is the problem.
+24:41 Speaker B: You're also talking to someone who's very creative, Right.
+24:43 Speaker B: And you could say, can we do this?
+24:45 Speaker B: I'm like, yeah.
+24:45 Speaker B: And then I could think of, like, 10 ways to do it.
+24:47 Speaker B: And technology is like that, Right?
+24:49 Speaker B: Like, there's always a way.
+24:52 Speaker B: So we need a list of what we're not going to do.
+24:54 Speaker B: You know, I think that would be really interesting.
+24:57 Speaker B: And then it could really define it.
+24:59 Speaker B: It's sort of like, what is it?
+25:01 Speaker B: Michelangelo?
+25:01 Speaker B: He's like, I just.
+25:03 Speaker B: The sculpture was in the stone.
+25:05 Speaker B: I just removed all the parts that didn't belong.
+25:07 Speaker B: You know, we need to remove all the parts that don't belong to see what this thing is.
+25:11 Speaker B: And Aaron has mentioned over and over actually since the beginning that he wants a pilot to explore.
+25:15 Speaker B: But even before, like the pilot, I think we need to just have some clear like no's.
+25:20 Speaker B: And I think there's some clear ones already.
+25:21 Speaker B: Which is not a social media platform.
+25:25 Speaker B: No direct communication, no even the ability to see who is in organizations.
+25:31 Speaker B: Is that true?
+25:32 Speaker B: Just like from outside, like you can see who's in your organization.
+25:35 Speaker A: Sure.
+25:36 Speaker B: If you have an organization, you can say, you can see the list of people in it and who's logged in recently, who filled in the well being assessment or not.
+25:43 Speaker B: But between organizations.
+25:45 Speaker B: No, like something like that.
+25:47 Speaker C: And it's something that I'm also curious to see how people react to this.
+25:52 Speaker C: Because for example, in when and in other networks that we have in the Wellbeing project, people want to know each other.
+25:58 Speaker C: Who's here?
+26:00 Speaker B: You should see my brainstorming, my whole brainstorming was about, I'll give you some of the principles and values that I had been developing.
+26:07 Speaker B: It's like the hearth, the connecting people remembering relationships, connecting to each other.
+26:16 Speaker C: Yeah, yeah.
+26:16 Speaker B: Like these kinds of things and it's, it's different.
+26:19 Speaker B: And I understand the, the rigor and the need to sort of protect people and even protect maybe the organization from kind of opening up a can of worms.
+26:29 Speaker B: Maybe.
+26:30 Speaker B: But they already have the whatsapps, you know, like the, the can has been opened.
+26:37 Speaker C: Yeah.
+26:40 Speaker B: Yeah.
+26:40 Speaker B: And it's a phone number.
+26:41 Speaker C: Something else that I'm thinking of is like what happens when people leave organizations.
+26:48 Speaker C: We don't want this knowledge that's already in this hub or this springboard to leave with them.
+26:54 Speaker C: The organization is still a member.
+26:57 Speaker B: So that's interesting.
+26:58 Speaker B: We need something that isn't even like an email registration.
+27:04 Speaker B: We need something.
+27:07 Speaker B: This is gonna sound weird but like we might need people's organizational paperwork instead of a username and password.
+27:16 Speaker B: Something that is consistent no matter who is within the structure.
+27:23 Speaker B: Right.
+27:23 Speaker B: Like emails will come and go even.
+27:27 Speaker B: Not everyone has a@wellbeingprojects.org email.
+27:32 Speaker B: Right.
+27:32 Speaker B: Like if some organizations might still not have the technical competence for that, they, they just have Gmail addresses.
+27:38 Speaker A: Right.
+27:39 Speaker C: So.
+27:41 Speaker B: What, what defines an organization that's in a consistent way?
+27:45 Speaker B: Maybe there's a handoff.
+27:47 Speaker B: Maybe that's another way of doing it is like if you do leave your organization, we need you to, to hand off to, to other people and have.
+27:59 Speaker B: You know how Gmail asks you to have a backup email address or something like that?
+28:03 Speaker B: Maybe, yes, maybe there's something like that.
+28:05 Speaker B: Like if you don't Have a backup email for if and when you leave or anything, who knows anything happens to you.
+28:12 Speaker B: Then maybe the, you know, we could ask them to include the delegate.
+28:20 Speaker B: You know, they might be the organizational lead and they are the admin, but maybe there's like a delegate that.
+28:27 Speaker C: And maybe we could also look at it like in the back end the admin, the welding project and admin of the platform can see who the people are, can manage all of these emails and accesses.
+28:41 Speaker C: But then for the user in the front end, you don't see any of this.
+28:46 Speaker C: That could also work and we really protect the data so that anyone else, outside outsiders, external agencies, whatever cannot access this data to see who's here.
+28:56 Speaker B: That is.
+28:57 Speaker B: That gets really tricky because once any view like that is available, it's scary already.
+29:04 Speaker B: It's like screenshots and like, you know, like things.
+29:08 Speaker B: What's it called?
+29:08 Speaker B: We got Epstein's emails about Trump.
+29:13 Speaker B: Right.
+29:14 Speaker B: They're coming out now.
+29:15 Speaker B: You know like you.
+29:17 Speaker B: Yeah.
+29:17 Speaker B: So yeah, it's okay.
+29:21 Speaker B: It's.
+29:21 Speaker B: Yeah.
+29:22 Speaker B: So there's a way of encrypting it.
+29:25 Speaker B: So basically Apple does something really interesting, right?
+29:27 Speaker B: So Apple without telling you, every time you use your Apple card on your phone or you know how you can pay with your phone now, it creates a new number and encrypts the transaction so that Apple can't know and so that the companies, every time you use it, think you're a new person.
+29:47 Speaker B: They can't create a profile of your card number.
+29:49 Speaker B: They don't do it because of people ask them.
+29:53 Speaker B: They do it because that's part of one of their core values is like privacy and security and they just built it in and they didn't tell anybody.
+29:58 Speaker B: You know, it's just that.
+30:00 Speaker B: So it's kind of cool.
+30:02 Speaker B: And also when governments come to Apple and say hey, we caught this criminal, can you decrypt their phone?
+30:08 Speaker B: They can sincerely say no because it's literally physically impossible for them to do that.
+30:16 Speaker B: And so they don't get in trouble legally as well.
+30:19 Speaker B: And so there's some legal assurance to encryption that might be helpful in case like let's.
+30:28 Speaker B: We should.
+30:28 Speaker B: It would be interesting to come up with like the risk profiles and maybe even like the worst case scenarios.
+30:33 Speaker B: Right.
+30:34 Speaker B: But protecting the wellbeing project and protecting everybody might require most things to be encrypted and then there might be a way of doing it so that the well being project can decrypt things.
+30:45 Speaker B: But I would recommend maybe even like individually limited views.
+30:51 Speaker B: So I'm not exactly sure I'll have to think about it a little bit more.
+30:54 Speaker B: But really I want to understand the risk profile a little bit bit deeper and who we're dealing with because, you know, if we're dealing with, you know, the, the FBI or the CIA, there's, there's certain encryption methodologies that some people think were developed by them to be able to be decrypted by them.
+31:15 Speaker B: And there's like deep things.
+31:16 Speaker C: Oh, wow.
+31:17 Speaker B: Yeah, it's.
+31:18 Speaker B: Yeah.
+31:18 Speaker B: RSA is a potentially backdoor encryption that's very commonly used actually.
+31:27 Speaker B: So if we think that the.
+31:29 Speaker B: All this should not be recorded right now actually.
+31:31 Speaker B: But anyway, if we do think that the FBI or the CIA is a potential antagonist that might want, then we should be thinking about that.
+31:40 Speaker B: But if it's just like smaller organizations, like people that are curious and would be willing to try to hack just to figure it out instead of like someone that's really dedicated, like a larger organization.
+31:55 Speaker B: I'm not exactly sure.
+31:59 Speaker B: Yeah.
+31:59 Speaker B: What the worst case scenario might be and what you guys are thinking about in terms of the risks.
+32:04 Speaker C: And this could be something like we could have a think tank or focus group with the pilot test users to chat about these scenarios too.
+32:15 Speaker A: Yeah.
+32:15 Speaker B: Aaron did say that sort of like thinking for people like, because not everyone thinks about some of these risks.
+32:24 Speaker B: Right.
+32:25 Speaker B: Like most people put up pictures of their kids on social media.
+32:29 Speaker B: Just.
+32:30 Speaker B: That's crazy.
+32:30 Speaker B: Like that, that's not, that's a bad idea for many reasons.
+32:36 Speaker B: But, but yeah.
+32:37 Speaker B: So like in terms of doing that focus group, it.
+32:41 Speaker B: You'd have to kind of first show what the problem is to be able to have them understand and then be able to get, you know, feedback.
+32:49 Speaker C: Right.
+32:50 Speaker B: It might be interest.
+32:50 Speaker B: More interesting to do a research on failure points in other organizations that might have some similar data.
+32:59 Speaker B: Right.
+33:00 Speaker B: And how it's been exploited.
+33:02 Speaker B: That could be more, maybe more relevant to try to, to do some research on that.
+33:07 Speaker B: Okay, I gotta go eat and feed the baby.
+33:10 Speaker B: But yeah, I guess I'm, I'm already like jumping all in just because that's my, my attitude.
+33:16 Speaker B: But I'm wondering if you have.
+33:20 Speaker B: You've seen this over time.
+33:21 Speaker B: You've seen like the previous development organization.
+33:24 Speaker B: But like what is like a timeline?
+33:27 Speaker B: Is there or is there no budget, etc?
+33:30 Speaker B: Like how.
+33:32 Speaker C: Yeah, I'll try to get that information from Aaron.
+33:34 Speaker C: I don't have, I've been struggling this year because I don't have that visibility.
+33:40 Speaker C: So.
+33:41 Speaker C: But I'll try to get in from him and get back to you.
+33:45 Speaker B: Yeah.
+33:46 Speaker C: I don't know.
+33:46 Speaker C: Did he Share anything he did.
+33:49 Speaker B: There is a budget but the only thing he said was and non profit rates.
+33:56 Speaker C: Oh great.
+33:58 Speaker B: And my, my wife is, you know we've actually this, I'll just be very frank.
+34:04 Speaker B: You know, we've actually seen people burn out at the wellbeing project and have very difficult like working experiences.
+34:11 Speaker B: So as I'm potentially stepping into doing stuff with the well being project, my wife is like, like remember that person xyz.
+34:20 Speaker B: I'd be careful, like make sure there's a budget and all of these things.
+34:24 Speaker B: And you know, I'm also in a position where I love the project, I love the people and I, I do need a budget, I do need a salary.
+34:34 Speaker B: But I'm also willing to put in some thoughts and thinking on you know, a volunteer basis.
+34:41 Speaker B: I am between contracts.
+34:42 Speaker B: So while I'm searching for contracts I do have some time.
+34:46 Speaker B: I would like it to be a paid gig if possible.
+34:49 Speaker B: But I'm also, you know, willing to make things work, you know.
+34:54 Speaker C: Yeah, I think like did you tell.
+34:58 Speaker B: This to Aaron that yeah, no, I asked about the budget.
+35:02 Speaker B: I think he knows that I would like to be remunerated and I do accept and understand that it's like non profit salary but I have no idea what that means for him.
+35:14 Speaker C: Okay.
+35:15 Speaker B: And like how he thinks the project is and like how much effort it's also you know, like if we, we wanted to do a part pilot like how much research should I be doing on like the, the risks strategies and like into other organizations and their potential like failures and drawbacks.
+35:32 Speaker B: Like the project could grow as much as we want it to.
+35:34 Speaker C: Yeah.
+35:35 Speaker B: So I want to know a little bit about like the potential scope of the budget just so I can say okay, so that means that I'll, you know, we just put like these many boundaries and we make the smallest, quickest prototype that has you know, X, Y or Z affordances to see how things work and then evolve from there.
+35:55 Speaker B: But yeah, it would help to know the budget just to be able to know also how big of a you know, first draft like prototype to explore.
+36:08 Speaker B: And we should talk a couple of times.
+36:10 Speaker B: Like I'm gonna take this call and I'm gonna take some time to think about it and come up with, I think should I be talking with you or should I be trying to talk with both you and Aaron at the same time?
+36:25 Speaker C: I'm.
+36:26 Speaker C: I think you can do it with me and if I think something is necessary to review with Aaron, I'll let him know.
+36:33 Speaker C: If you, something comes up and you want to tell him to like go ahead.
+36:37 Speaker C: But I think it will be easier if it's just you and I. Huh.
+36:40 Speaker B: Okay.
+36:41 Speaker C: And I'll ask him about the budget and time frame again, trying to get some clarity.
+36:46 Speaker C: And for you too, I completely understand.
+36:47 Speaker C: Like I'd be in your position and I'd be the same.
+36:50 Speaker B: Yeah, yeah.
+36:51 Speaker B: But the, the cool news, I think I told you is that I no longer am like a co founder of Bloom.
+36:57 Speaker B: I, I stepped back to be on the board, you know, when you went off to the United States and is trying to expand there.
+37:05 Speaker B: I'm trying to figure out what's next.
+37:07 Speaker B: It's like a big bit of a question mark.
+37:09 Speaker B: But yeah, it's been interesting.
+37:14 Speaker B: I've been exploring lots of things and exploring also how to stay in touch with the community and actually instead of just leaving people to do the next program, which is what our funders have always wanted, it's like next program, next program.
+37:27 Speaker B: I looked back and I'm like, we have 10, 11 people that have, we've accompanied, you know, each of them sometimes for like three or four months at a time and then we just leave them.
+37:37 Speaker B: And all of them, you know, I've been, I called 30 so far and they all had such nice things to say and like you're my people, like why should I go find new people?
+37:47 Speaker B: So I'm thinking of ways of creating also non funded but like self funded support organization for this group.
+37:58 Speaker B: This is kind of what's evolving right now.
+38:00 Speaker B: I'm wondering if we can be stronger together.
+38:03 Speaker B: Maybe some kind of like membership thing, maybe even like revenue share, creating a new type of investment vehicle, sort of like an ETF.
+38:12 Speaker B: But for social enterprises, you know, we have 10, 11 enterprises and normal investors look at them and they're like, oh, you're growing like 10%, 20%, 30% a year.
+38:22 Speaker B: Like that's nothing.
+38:23 Speaker B: We need 10x to 1000x.
+38:26 Speaker B: Right.
+38:27 Speaker B: And yeah, just because of what they're.
+38:30 Speaker B: The stack of investors, you know, there's like pension funds and then limited partners and then investors and then social enterprises are in the riskiest basket.
+38:41 Speaker B: So if you.
+38:42 Speaker B: Everybody needs like 3x over the person underneath them for their investments all to make sense.
+38:48 Speaker B: And it just doesn't make sense.
+38:49 Speaker B: And this whole ecosystem is silly.
+38:51 Speaker B: And so I was thinking how do we de risk it and we can just put 100 of them together, you know, and then we'll be able to give dividends and we don't have to give equity.
+39:00 Speaker B: We can say hey, just like invest in this group.
+39:04 Speaker B: Of social enterprises and you get, you know, whatever 3% above inflation and it's, it's, it's safe because we have two years of data on all of them about their revenue.
+39:17 Speaker B: Anyway, so I'm trying to come up with this idea of being stronger together and creating ways of supporting each other.
+39:23 Speaker B: And this is where it gets crazy.
+39:25 Speaker B: I know you guys, you don't want payment processing on the platform, but I'm trying to figure out if I can get people to share revenue, you know.
+39:35 Speaker C: Wow.
+39:36 Speaker B: Yeah.
+39:36 Speaker B: And so far everyone said yes.
+39:38 Speaker B: That's the crazy thing.
+39:39 Speaker B: So the idea is like if you put in, you know, 5% of your revenue, 2 to 5% every month and then if everyone does that and then one month you are under your average for the last six months, we top you up back to your average.
+39:56 Speaker B: And if you're over, then you're paying more into the system because a lot of organizations have very choppy incomes.
+40:03 Speaker B: And if we're pulling revenues like this, first of all we accrue like an investment pool so that we can actually invest in each other and we can make co investment decisions.
+40:13 Speaker B: But also we can top people up when, let's say some unexpected things happen or like schools for instance.
+40:22 Speaker B: A lot of my teams are in education.
+40:25 Speaker B: During the school year it's great.
+40:26 Speaker B: But then in the summer everybody.
+40:28 Speaker B: And then hire people again, which is not good for their, not good for an organization.
+40:33 Speaker B: So this way they can actually basically chip in during the school year and then take back during the, the months off summer.
+40:43 Speaker B: Yeah.
+40:43 Speaker B: So this is kind of what I'm exploring with the teams.
+40:45 Speaker B: It's evolving.
+40:47 Speaker B: It's kind of crazy.
+40:48 Speaker B: It's a little scary, but just.
+40:52 Speaker B: Yeah, because dealing with money, you know, like money and relationships can be so, yeah.
+40:57 Speaker B: Dangerous.
+40:58 Speaker B: But from 10 11, if I can find 100 people with the right attitude and the right like financial structure, then that would be great.
+41:08 Speaker B: Would be so cool to do something like this.
+41:10 Speaker B: Anyway, we'll see.
+41:11 Speaker C: Wow.
+41:12 Speaker C: Bilal, no.
+41:13 Speaker C: Thank you for sharing.
+41:14 Speaker B: Yeah, yeah, yeah.
+41:15 Speaker B: Well, we'll see how it goes.
+41:17 Speaker B: So far I, I got like real great feedback.
+41:20 Speaker B: And you know, the other crazy thing is you'd love to hear this.
+41:22 Speaker B: As somebody from the well being project, I'm just so surprised that people like when I ask them about the programming and like what we did, that was really helpful.
+41:32 Speaker B: People are asking for well being experiences, reminders, practices, and mentioning it as like the core reason why they joined our programs to begin with.
+41:44 Speaker B: They're like, because of that like messaging and marketing and we desperately need this in our.
+41:49 Speaker B: And I'm like, you know, like, sometimes you think of it as a fluffy thing, even though we've been talking and working about it for so long.
+41:57 Speaker B: Then when this happens, you're like, oh, no, it's real.
+42:00 Speaker B: It matters.
+42:01 Speaker C: Real.
+42:02 Speaker A: Yeah.
+42:03 Speaker C: All right.
+42:04 Speaker C: Thank you.
+42:04 Speaker C: I got chills.
+42:07 Speaker B: Yeah, we'll see.
+42:08 Speaker B: We'll see how this goes.
+42:10 Speaker B: And it's.
+42:10 Speaker B: It's nice to have some more touch points.
+42:14 Speaker B: So, inshallah, hopefully you won't get sick of hearing from me, but I'll do a little bit of work on this and I'll.
+42:21 Speaker B: You know, this is one thing I need to learn because I'm.
+42:25 Speaker B: I've never been a consultant.
+42:27 Speaker B: I've always just been a project person and I just invest my whole self.
+42:30 Speaker C: Right.
+42:30 Speaker B: I'm just like, dive in.
+42:32 Speaker B: And so this idea of I will give myself 10 hours and then I'll stop and whatever I am at, I will share and.
+42:41 Speaker B: And then we'll see if there's like, budget for more than that.
+42:43 Speaker B: Like, that kind of attitude and mindset is so not me.
+42:48 Speaker B: But we'll see.
+42:48 Speaker B: I'll.
+42:49 Speaker B: I think I'll have to practice something like that because I can.
+42:52 Speaker B: I can just get into rabbit holes, you know, and.
+42:55 Speaker C: Yeah, but like, in the long run, if you're seeing that those boundaries help for your, like, for your well being, basically.
+43:04 Speaker B: No, Yeah, I need, I need to figure it out.
+43:07 Speaker C: It's.
+43:08 Speaker B: I did, I did get a few contracts, so I just finished my contract with the U.N. but then there's.
+43:14 Speaker B: I don't know if you've ever been in this place, but, you know, I'm just applying for contracts, you know, and that takes work, that's effort that no one pays you for.
+43:22 Speaker B: And a lot of time.
+43:24 Speaker B: Yeah.
+43:25 Speaker B: And then you get some of them.
+43:26 Speaker B: And so.
+43:27 Speaker B: So it's really hard to figure out, like, how much time I have for.
+43:33 Speaker B: For even side projects like this.
+43:34 Speaker B: Right.
+43:34 Speaker B: Like this.
+43:35 Speaker B: This is, this is great.
+43:36 Speaker B: But even if it would be great, I think there is a budget.
+43:40 Speaker B: But, like, I could spend 100% of my time just applying to things.
+43:44 Speaker B: Right.
+43:45 Speaker B: And then I'll have to figure out my hit rates and all of these things.
+43:49 Speaker B: I think I don't belong in consulting.
+43:50 Speaker B: I'm gonna hopefully take it easy and slowly grow this pool of entrepreneurs that I've been talking with within Bloom.
+43:59 Speaker B: I might have to come up with a new name, but I think it's going to be.
+44:02 Speaker B: That might be my next thing.
+44:04 Speaker B: It will be this, like, community support.
+44:06 Speaker B: And I'm thinking about Doing it in a tiered way.
+44:08 Speaker B: So initially, wellbeing, practices, conversations, networking.
+44:13 Speaker B: You pay, I don't know, 50 bucks a month or something like that.
+44:16 Speaker B: You get access to this and I get to have an income.
+44:20 Speaker B: And then once we build trust and keep talking about this idea of like our financial strength and bringing that together, I can start talking about like this new investment type and form the cooperative.
+44:34 Speaker B: Basically it would be a cooperative social enterprises that can take outside investment, but also invest in its itself.
+44:41 Speaker B: But yeah, that's the idea is to stage it.
+44:42 Speaker B: And I think that's going to be my next thing.
+44:44 Speaker B: But I'm not.
+44:44 Speaker B: I'm not sure yet.
+44:49 Speaker B: Hopefully you're a little tired.
+44:51 Speaker B: I wish I could give you some chocolate.
+44:54 Speaker C: I delicious with that orange red.
+44:56 Speaker B: Oh, I love that one.
+44:57 Speaker B: Yeah.
+44:58 Speaker C: Yes, me too.
+44:59 Speaker B: Okay, I'll get you some.
+45:02 Speaker B: We'll see when we see each other next.
+45:03 Speaker B: It'll probably be sometime from now, but inshallah, we will soon at some point.
+45:08 Speaker C: Yes, yes.
+45:10 Speaker C: Thank you so much.
+45:12 Speaker B: You're in Mexico?
+45:14 Speaker C: Mexico City.
+45:15 Speaker C: Yes.
+45:16 Speaker A: Okay.
+45:16 Speaker B: I just met some visitors from Mexico City on the train from Paris.
+45:21 Speaker B: And they were a family.
+45:23 Speaker B: They were so cute.
+45:24 Speaker B: A lady and her mom and her brother, and they were going on a tour of Europe and they were just going as a.
+45:31 Speaker B: As like as a family.
+45:33 Speaker B: And it was just so nice.
+45:36 Speaker B: I. I loved, you know, sharing the fact that I visited Mexico and Mexico City and they were so.
+45:43 Speaker B: They spoke so little French and so little English.
+45:47 Speaker B: And I'm like, how are you going to do this?
+45:48 Speaker B: But they were cute.
+45:50 Speaker B: Family made me think of you and our times together.
+45:53 Speaker B: Hopefully.
+45:54 Speaker B: Hopefully see each other soon.
+45:56 Speaker C: Yes.
+45:57 Speaker C: Thank you, Bilal.
+45:58 Speaker C: I hope you have a good Friday and weekend with your family.
+46:07 Speaker C: Thank you.]]]

@@ -10,6 +10,7 @@ type FilterProps = {
     language?: string
     location?: string
     accepting?: string
+    search?: string
   }
 }
 
@@ -55,6 +56,26 @@ export default function ProviderSearch({ currentFilters }: FilterProps) {
       </div>
 
       <div className="space-y-6">
+        {/* Text Search */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Search
+          </label>
+          <input
+            type="text"
+            placeholder="Search by name, bio, specialty..."
+            defaultValue={currentFilters.search || ''}
+            onChange={(e) => {
+              const value = e.target.value
+              // Debounce would be better, but keeping simple for MVP
+              if (value.length > 2 || value.length === 0) {
+                handleFilterChange('search', value)
+              }
+            }}
+            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+
         {/* Location Search */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">

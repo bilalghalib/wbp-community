@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -30,8 +31,11 @@ export async function POST(request: Request) {
       )
     }
 
+    // Use admin client for auth operations
+    const adminClient = createAdminClient()
+    
     // Check if user already exists in auth.users
-    const { data: existingAuthUser } = await supabase.auth.admin.listUsers()
+    const { data: existingAuthUser } = await adminClient.auth.admin.listUsers()
     const authUser = existingAuthUser?.users.find(u => u.email === email)
 
     let userId: string
@@ -83,7 +87,7 @@ export async function POST(request: Request) {
       // Create new user in Supabase Auth
       // Note: In production, you'd send an invitation email instead
       // For now, creating a user with a temporary password they'll need to reset
-      const { data: newAuthUser, error: authError } = await supabase.auth.admin.createUser({
+      const { data: newAuthUser, error: authError } = await adminClient.auth.admin.createUser({
         email,
         email_confirm: true, // Auto-confirm for MVP
         user_metadata: { full_name },

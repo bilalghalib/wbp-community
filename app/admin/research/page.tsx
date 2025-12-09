@@ -136,9 +136,9 @@ export default async function AdminResearchPage() {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Research Repository Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Resources Repository Analytics</h1>
           <p className="mt-2 text-gray-600">
-            Insights into research sharing across the network
+            Insights into resource sharing across the network
           </p>
         </div>
 
@@ -371,10 +371,10 @@ export default async function AdminResearchPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             <div>
-              <h3 className="text-sm font-semibold text-blue-900">Research Insights</h3>
+              <h3 className="text-sm font-semibold text-blue-900">Resource Insights</h3>
               <p className="mt-1 text-sm text-blue-700">
                 Use these insights to identify trending topics, encourage contributions from organizations
-                that haven&apos;t shared research yet, and surface valuable resources to the network.
+                that haven&apos;t shared resources yet, and surface valuable documents to the network.
                 Consider creating curated collections based on popular tags.
               </p>
             </div>

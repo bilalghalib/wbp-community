@@ -1,0 +1,43 @@
+# HIGH PRIORITY QUESTIONS (Top 7 for Budget-Conscious Pilot)
+
+How does the speaker describe their approach to practicing presence with clients or communities?
+What does the speaker say about sustaining their practice when emotions or circumstances shift?
+What specific methods or techniques does the speaker teach or use in their work?
+How does the speaker describe the difference between surface-level and deep engagement in their work?
+What does the speaker say about boundaries, limitations, or what they don't do in their practice?
+What does the speaker say distinguishes their approach from more conventional or mainstream practices?
+What traditions, frameworks, or disciplines outside their primary field inform the speaker's work?
+
+---
+
+## Why These 7?
+
+These extract the core information organizations need to discern practitioner fit:
+
+1. **How they practice presence** - depth vs. surface
+2. **Sustaining practice** - consistency vs. emotion-dependent  
+3. **Specific methods** - concrete, evaluable techniques
+4. **Surface vs. deep** - reinforces #1, quality of engagement
+5. **Boundaries** - realistic expectations, prevents burnout
+6. **What distinguishes them** - unique value proposition
+7. **Cross-disciplinary** - holistic/integrative approaches
+
+These map to the most important database fields:
+- `how_i_practice` (questions 1, 2, 4, 6)
+- `specific_methods` (question 3)
+- `boundaries_statement` (question 5)
+- `disciplines_and_frameworks` (question 7)
+
+## Cost Estimate
+- 7 questions × 5 transcripts = 35 extractions
+- Estimated cost: ~$5.25-7.00 total (vs. $22.50-30.00 for all 15)
+
+## For Copy-Paste (One Per Line)
+
+How does the speaker describe their approach to practicing presence with clients or communities?
+What does the speaker say about sustaining their practice when emotions or circumstances shift?
+What specific methods or techniques does the speaker teach or use in their work?
+How does the speaker describe the difference between surface-level and deep engagement in their work?
+What does the speaker say about boundaries, limitations, or what they don't do in their practice?
+What does the speaker say distinguishes their approach from more conventional or mainstream practices?
+What traditions, frameworks, or disciplines outside their primary field inform the speaker's work?

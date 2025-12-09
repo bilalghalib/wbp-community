@@ -1,0 +1,97 @@
+{
+  "fetched": "2025-11-20T10:09:56.498Z",
+  "total": 18,
+  "successful": 0,
+  "results": [
+    {
+      "videoId": "3lfgsjTF0kE",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "Rx-h3_eKhbQ",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "jbj3PNWsJqg",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "gx40bfB7W9Q",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "kjEyyEF0568",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "eDR7BDjm3WU",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "MHAlP1W-j_M",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "DN_tQIwIts0",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "uWWwAqD2XFA",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "pxxyIlM4P2o",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "UYpUNUfU0Q0",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "kvBCDoy9XeY",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "oRhqEKwruDw",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "ze0Ia5bpUu0",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "tyuHapxSWMk",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "Vuos88BSbnU",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "g6WCsBUfTZE",
+      "status": "failed",
+      "error": "No transcript available"
+    },
+    {
+      "videoId": "wUUpL8z__a0",
+      "status": "failed",
+      "error": "No transcript available"
+    }
+  ]
+}

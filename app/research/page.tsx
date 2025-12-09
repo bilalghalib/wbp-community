@@ -37,7 +37,7 @@ export default async function ResearchLibraryPage({
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Restricted</h1>
           <p className="mt-2 text-gray-600">
-            You must be a member of an organization to view research.
+            You must be a member of an organization to view resources.
           </p>
           <Link href="/dashboard" className="mt-4 inline-block text-blue-600 hover:text-blue-500">
             Return to Dashboard
@@ -95,13 +95,13 @@ export default async function ResearchLibraryPage({
                 Springboard
               </Link>
               <span className="ml-4 text-gray-400">/</span>
-              <span className="ml-4 text-gray-700">Research Library</span>
+              <span className="ml-4 text-gray-700">Resources</span>
             </div>
             <Link
               href="/research/new"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
             >
-              + Upload Research
+              + Upload Resource
             </Link>
           </div>
         </div>
@@ -109,9 +109,9 @@ export default async function ResearchLibraryPage({
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Research Library</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Resources</h1>
           <p className="mt-2 text-gray-600">
-            Explore research, reports, and resources shared by organizations in the network.
+            Explore resources, reports, and documents shared by organizations in the network.
           </p>
         </div>
 
@@ -145,18 +145,18 @@ export default async function ResearchLibraryPage({
             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No research found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No resources found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchParams.tag || searchParams.topic || searchParams.search
+              {searchParams.tag || searchParams.topic || searchParams.type || searchParams.search
                 ? 'Try adjusting your filters.'
-                : 'Be the first to share research with the network.'}
+                : 'Be the first to share resources with the network.'}
             </p>
             <div className="mt-6">
               <Link
                 href="/research/new"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                + Upload Research
+                + Upload Resource
               </Link>
             </div>
           </div>

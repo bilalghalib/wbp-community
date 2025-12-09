@@ -47,9 +47,9 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
     query = query.eq('is_active', false)
   }
 
-  // Search by name or slug
+  // Search using full-text search (tsv) for better performance
   if (searchParams.search) {
-    query = query.or(`name.ilike.%${searchParams.search}%,slug.ilike.%${searchParams.search}%`)
+    query = query.textSearch('tsv', searchParams.search)
   }
 
   const { data: organizations } = await query
@@ -237,7 +237,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
                       {org.surveyCount} survey{org.surveyCount !== 1 ? 's' : ''}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {org.researchCount} research doc{org.researchCount !== 1 ? 's' : ''}
+                      {org.researchCount} resource{org.researchCount !== 1 ? 's' : ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

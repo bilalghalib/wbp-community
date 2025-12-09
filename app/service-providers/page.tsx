@@ -9,6 +9,7 @@ type SearchParams = {
   language?: string
   modality?: string
   accepting?: string
+  search?: string
 }
 
 export default async function ServiceProvidersPage({
@@ -61,6 +62,11 @@ export default async function ServiceProvidersPage({
     `)
     .eq('is_visible', true)
     .order('full_name')
+
+  // Apply text search (full-text search using tsv)
+  if (searchParams.search) {
+    query = query.textSearch('tsv', searchParams.search)
+  }
 
   // Apply filters
   if (searchParams.specialty) {

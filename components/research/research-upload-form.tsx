@@ -148,7 +148,7 @@ export default function ResearchUploadForm({ userId, organizations }: Props) {
       router.refresh()
     } catch (err) {
       console.error('Upload error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to upload research')
+      setError(err instanceof Error ? err.message : 'Failed to upload resource')
       setIsSubmitting(false)
       setUploadProgress(0)
     }
@@ -396,7 +396,7 @@ export default function ResearchUploadForm({ userId, organizations }: Props) {
           disabled={isSubmitting || !file}
           className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Uploading...' : 'Upload Research'}
+          {isSubmitting ? 'Uploading...' : 'Upload Resource'}
         </button>
       </div>
     </form>

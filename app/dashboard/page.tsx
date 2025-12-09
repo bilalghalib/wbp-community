@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import GlobalSearchLive from '@/components/global-search-live'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -64,6 +65,11 @@ export default async function DashboardPage() {
             Welcome, {profile?.full_name}
           </h2>
 
+          {/* Global Search */}
+          <div className="mb-8">
+            <GlobalSearchLive />
+          </div>
+
           <div className="mt-8">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Your Organizations</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -119,9 +125,9 @@ export default async function DashboardPage() {
               href="/research"
               className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow"
             >
-              <h3 className="text-lg font-medium text-gray-900">Research Library</h3>
+              <h3 className="text-lg font-medium text-gray-900">Resources</h3>
               <p className="mt-2 text-sm text-gray-500">
-                Explore shared research and resources
+                Explore shared resources and documents
               </p>
             </a>
 

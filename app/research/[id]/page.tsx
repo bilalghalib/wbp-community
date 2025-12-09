@@ -56,7 +56,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
               This document is private to {document.organization.name}.
             </p>
             <Link href="/research" className="mt-4 inline-block text-blue-600 hover:text-blue-500">
-              Return to Research Library
+              Return to Resources
             </Link>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/research" className="text-sm text-gray-700 hover:text-gray-900">
-              ← Research Library
+              ← Resources
             </Link>
             {downloadUrl && (
               <a
@@ -302,7 +302,7 @@ export default async function ResearchDetailPage({ params }: PageProps) {
             href={`/organizations/${document.organization.slug}/research`}
             className="text-blue-600 hover:text-blue-500 text-sm"
           >
-            View all research from this organization →
+            View all resources from this organization →
           </Link>
         </div>
       </main>
