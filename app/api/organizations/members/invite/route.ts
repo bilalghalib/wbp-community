@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    // Check for service role key
-    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('SUPABASE_SERVICE_ROLE_KEY is not set')
+    // Check for secret key (prefer new format, support legacy)
+    if (!process.env.SUPABASE_SECRET_KEY && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) is not set')
       return NextResponse.json(
-        { error: 'Server configuration error. Please contact support.' },
+        { error: 'Server configuration error. Please add SUPABASE_SECRET_KEY to your .env.local file. Get it from Supabase Dashboard → Settings → API → Secret key.' },
         { status: 500 }
       )
     }
@@ -41,10 +41,28 @@ export async function POST(request: Request) {
     }
 
     // Use admin client for auth operations
-    const adminClient = createAdminClient()
+    let adminClient
+    try {
+      adminClient = createAdminClient()
+    } catch (error) {
+      console.error('Failed to create admin client:', error)
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Server configuration error' },
+        { status: 500 }
+      )
+    }
     
     // Check if user already exists in auth.users
-    const { data: existingAuthUser } = await adminClient.auth.admin.listUsers()
+    const { data: existingAuthUser, error: listUsersError } = await adminClient.auth.admin.listUsers()
+    
+      if (listUsersError) {
+        console.error('Error listing users:', listUsersError)
+        return NextResponse.json(
+          { error: 'Failed to check existing users. Please verify your SUPABASE_SECRET_KEY is correct.' },
+          { status: 500 }
+        )
+      }
+    
     const authUser = existingAuthUser?.users.find(u => u.email === email)
 
     let userId: string
@@ -104,8 +122,22 @@ export async function POST(request: Request) {
 
       if (authError || !newAuthUser.user) {
         console.error('Error creating auth user:', authError)
+        console.error('Auth error details:', {
+          message: authError?.message,
+          status: authError?.status,
+          code: authError?.code,
+        })
+        
+        // Provide more helpful error message
+        if (authError?.status === 401) {
+          return NextResponse.json(
+            { error: 'Invalid secret key. Please check your SUPABASE_SECRET_KEY in .env.local. Make sure you copied the Secret key (sb_secret_...), not the Publishable key.' },
+            { status: 500 }
+          )
+        }
+        
         return NextResponse.json(
-          { error: 'Failed to create user account' },
+          { error: authError?.message || 'Failed to create user account' },
           { status: 500 }
         )
       }
