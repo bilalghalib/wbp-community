@@ -12,6 +12,9 @@ export default function Footer() {
             <Link href="/faq" className="text-sm text-gray-500 hover:text-gray-900">
               Community Guidelines & FAQ
             </Link>
+            <Link href="/security-explained" className="text-sm text-gray-500 hover:text-gray-900">
+              Security & Privacy
+            </Link>
             <Link href="https://wellbeing-project.org" target="_blank" className="text-sm text-gray-500 hover:text-gray-900">
               The Wellbeing Project
             </Link>
