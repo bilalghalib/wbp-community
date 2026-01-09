@@ -41,7 +41,10 @@ export default async function DeploySurveyPage({ searchParams }: PageProps) {
   }
 
   const organizations = adminMemberships
-    .map((m) => m.organization?.[0])
+    .map((m: any) => {
+      const org = Array.isArray(m.organization) ? m.organization[0] : m.organization
+      return org
+    })
     .filter((org): org is { id: string; name: string; slug: string } => Boolean(org))
     .map((org) => ({
       id: org.id,
