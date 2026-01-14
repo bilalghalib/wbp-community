@@ -10,6 +10,10 @@ ADD COLUMN IF NOT EXISTS last_annual_survey_at timestamptz;
 ALTER TABLE organizations
 ADD COLUMN IF NOT EXISTS last_annual_survey_at timestamptz;
 
+-- 3. Add grace period to survey_seasons (if not already added)
+ALTER TABLE survey_seasons
+ADD COLUMN IF NOT EXISTS grace_period_end_at timestamptz;
+
 -- 3. Create submissions audit trail table
 CREATE TABLE IF NOT EXISTS annual_survey_submissions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -40,7 +44,7 @@ CREATE POLICY "Users can create own submissions"
 ON annual_survey_submissions FOR INSERT
 WITH CHECK (auth.uid() = user_id);
 
--- 4. Gate check function
+-- 5. Gate check function
 CREATE OR REPLACE FUNCTION check_annual_survey_gate(target_user_id uuid)
 RETURNS json
 LANGUAGE plpgsql
@@ -58,11 +62,12 @@ DECLARE
   org_blocked boolean := false;
   block_reason text := null;
 BEGIN
-  -- Get active season (must be within date range AND marked active)
+  -- Get active season (must be within date range or grace period AND marked active)
   SELECT * INTO active_season
   FROM survey_seasons
   WHERE is_active = true
-  AND now() BETWEEN start_at AND end_at
+  AND now() >= start_at
+  AND (now() <= end_at OR (grace_period_end_at IS NOT NULL AND now() <= grace_period_end_at))
   LIMIT 1;
 
   -- No active season = no gate

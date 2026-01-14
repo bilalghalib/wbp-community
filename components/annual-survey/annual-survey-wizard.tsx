@@ -213,10 +213,10 @@ export function AnnualSurveyWizard() {
                   </p>
                   <div className="bg-[#FFFBEB] border border-[#FEF3C7] p-6 rounded-2xl">
                     <p className="text-sm text-gray-700 italic leading-relaxed">
-                      "May I become at all times, both now and forever, a protector of those without protection, 
-                      a guide for those who have lost their way..."
+                      "We don't heal in isolation, but in community. When we share what sustains us,
+                      we create a reservoir of resilience for the whole."
                     </p>
-                    <p className="text-[10px] text-gray-400 mt-3 uppercase tracking-widest font-semibold">— Shantideva</p>
+                    <p className="text-[10px] text-gray-400 mt-3 uppercase tracking-widest font-semibold">— S. Kelley Harrell</p>
                   </div>
                 </div>
               )}
