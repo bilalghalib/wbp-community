@@ -9,6 +9,8 @@ import { submitRegionalInsight } from '@/lib/services/insights-service';
 import { createClient } from '@/lib/supabase/client';
 import { OrgProfileForm } from './steps/org-profile-form';
 import { InsightsForm } from './steps/insights-form';
+import { AddPractitionerStep } from './steps/add-practitioner-step';
+import { AddResourceStep } from './steps/add-resource-step';
 
 enum Step {
   Welcome = 0,
@@ -40,6 +42,10 @@ export function AnnualSurveyWizard() {
   const [context, setContext] = useState<UserContext | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  
+  // Local state for contributions during this session
+  const [addedPractitioners, setAddedPractitioners] = useState<any[]>([]);
+  const [addedResources, setAddedResources] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -105,22 +111,43 @@ export function AnnualSurveyWizard() {
     try {
       const supabase = createClient();
       
-      // 1. Record Regional Insights
+      // 1. Submit Insights
       await submitRegionalInsight({
         organization_id: context.orgData?.id,
         user_id: context.userId,
         region: context.orgData?.location_region || 'Unknown',
-        sector: 'Unknown', // Could add sector to org data
+        sector: 'Unknown',
         answers: insights
       });
 
-      // 2. Update User's last survey date
+      // 2. Submit Practitioners
+      for (const p of addedPractitioners) {
+        await fetch('/api/service-providers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...p,
+            userId: context.userId,
+            organizationId: context.orgData?.id,
+            offers_remote: true,
+            is_accepting_clients: true
+          }),
+        });
+      }
+
+      // 3. Submit Resources (Links only for now via simple wizard)
+      for (const r of addedResources) {
+        // We need an API route that handles links or we use research table with null file
+        // For prototype simplicity, we'll log them or defer to full upload page
+        console.log('Added resource:', r);
+      }
+
+      // 4. Update Timestamps
       await supabase
         .from('users')
         .update({ last_annual_survey_at: new Date().toISOString() })
         .eq('id', context.userId);
 
-      // 3. Update Organization's last survey date (if admin)
       if (context.isAdmin && context.orgData?.id) {
         await supabase
           .from('organizations')
@@ -136,8 +163,6 @@ export function AnnualSurveyWizard() {
       setSubmitting(false);
     }
   };
-
-  const progress = (currentStep / Step.Complete) * 100;
 
   const next = () => {
     let nextStep = currentStep + 1;
@@ -176,9 +201,9 @@ export function AnnualSurveyWizard() {
       <div className="mb-10">
         <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-gray-400 mb-2 px-1">
           <span>{currentStep === Step.Welcome ? 'Welcome' : `Step ${currentStep} of 5`}</span>
-          <span>{Math.round(progress)}% Complete</span>
+          <span>{Math.round((currentStep / Step.Complete) * 100)}% Complete</span>
         </div>
-        <Progress value={progress} className="h-1.5 bg-gray-100" />
+        <Progress value={(currentStep / Step.Complete) * 100} className="h-1.5 bg-gray-100" />
       </div>
 
       <Card className="p-10 border-none shadow-xl shadow-gray-200/50 rounded-2xl bg-white min-h-[500px]">
@@ -247,47 +272,25 @@ export function AnnualSurveyWizard() {
         )}
 
         {currentStep === Step.Practitioners && (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">Share a Practitioner?</h2>
-              <p className="text-[#5D6D7E]">Have you worked with someone transformative this year? Your recommendations help the whole network.</p>
-            </div>
-            
-            <div className="h-64 bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 space-y-4">
-              <p className="text-sm text-gray-400 max-w-xs italic">"A recommendation is a vote of confidence in a colleague's work."</p>
-              <Button variant="outline" className="border-gray-300 rounded-xl hover:bg-white transition-colors">Add a Practitioner</Button>
-            </div>
-
-            <div className="flex justify-between mt-12">
-              <Button variant="ghost" onClick={back} className="text-gray-400">Back</Button>
-              <div className="space-x-3">
-                <Button variant="ghost" onClick={next} className="text-gray-500">Skip for now</Button>
-                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-8 rounded-xl">Next: Resources</Button>
-              </div>
-            </div>
-          </div>
+          <AddPractitionerStep 
+            onAdd={(data) => {
+              setAddedPractitioners([...addedPractitioners, data]);
+              next();
+            }}
+            onSkip={next}
+            onBack={back}
+          />
         )}
 
         {currentStep === Step.Resources && (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">Share a Resource?</h2>
-              <p className="text-[#5D6D7E]">Toolkits, reports, or findings that could support other organizations.</p>
-            </div>
-            
-            <div className="h-64 bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 space-y-4">
-              <p className="text-sm text-gray-400 max-w-xs italic">"Building a reservoir of knowledge for the field."</p>
-              <Button variant="outline" className="border-gray-300 rounded-xl hover:bg-white transition-colors">Upload Resource</Button>
-            </div>
-
-            <div className="flex justify-between mt-12">
-              <Button variant="ghost" onClick={back} className="text-gray-400">Back</Button>
-              <div className="space-x-3">
-                <Button variant="ghost" onClick={next} className="text-gray-500">Skip for now</Button>
-                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-8 rounded-xl">Next: Insights</Button>
-              </div>
-            </div>
-          </div>
+          <AddResourceStep 
+            onAdd={(data) => {
+              setAddedResources([...addedResources, data]);
+              next();
+            }}
+            onSkip={next}
+            onBack={back}
+          />
         )}
 
         {currentStep === Step.Insights && (
