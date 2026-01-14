@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { isSuperAdmin } from '@/lib/utils/admin'
 
 export default async function ActivityLogsPage() {
   const supabase = await createClient()
@@ -17,9 +18,7 @@ export default async function ActivityLogsPage() {
     .eq('id', user.id)
     .single()
 
-  const isWBPAdmin = userProfile?.email.endsWith('@wellbeingproject.org')
-
-  if (!isWBPAdmin) {
+  if (!isSuperAdmin(userProfile?.email)) {
     redirect('/admin')
   }
 

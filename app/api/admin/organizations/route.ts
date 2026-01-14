@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { isSuperAdmin } from '@/lib/utils/admin';
 
 export async function POST(request: Request) {
   try {
@@ -17,9 +18,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single();
 
-    const isWBPAdmin = userProfile?.email?.endsWith('@wellbeingproject.org');
-
-    if (!isWBPAdmin) {
+    if (!isSuperAdmin(userProfile?.email)) {
       return NextResponse.json(
         { error: 'Only WBP administrators can create organizations' },
         { status: 403 }

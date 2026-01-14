@@ -22,14 +22,15 @@ enum Step {
 }
 
 interface UserContext {
+  userId: string;
+  seasonId: string | null;
   isAdmin: boolean;
+  orgData: any;
+  stats: ImpactStats | null;
   isFirstTime: boolean;
   hasSharedPractitioners: boolean;
   hasSharedResources: boolean;
-  stats: ImpactStats | null;
-  orgData: any;
-  userId: string;
-  seasonId: string | null;
+  totalContributors: number;
   communityStats: {
     totalPractitioners: number;
     totalResources: number;
@@ -82,6 +83,7 @@ export function AnnualSurveyWizard() {
       const { count: totalPractitioners } = await supabase.from('service_providers').select('*', { count: 'exact', head: true });
       const { count: totalResources } = await supabase.from('research_documents').select('*', { count: 'exact', head: true });
       const { count: totalOrgs } = await supabase.from('organizations').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      const { count: totalContributors } = await supabase.from('regional_insights').select('*', { count: 'exact', head: true });
 
       setContext({
         userId: user.id,
@@ -89,6 +91,7 @@ export function AnnualSurveyWizard() {
         isAdmin,
         orgData: membership?.organizations,
         stats,
+        totalContributors: (totalContributors || 0) + 1, // +1 for the current session
         isFirstTime: (practitionerCount || 0) === 0 && (resourceCount || 0) === 0,
         hasSharedPractitioners: (practitionerCount || 0) > 0,
         hasSharedResources: (resourceCount || 0) > 0,
@@ -111,7 +114,48 @@ export function AnnualSurveyWizard() {
     try {
       const supabase = createClient();
       
-      // 1. Submit Insights
+      // 1. Submit Practitioners
+      for (const p of addedPractitioners) {
+        try {
+          const res = await fetch('/api/service-providers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...p,
+              userId: context.userId,
+              organizationId: context.orgData?.id,
+              is_visible: true
+            }),
+          });
+          if (!res.ok) console.error('Failed to save practitioner', p.full_name);
+        } catch (e) {
+          console.error('Error saving practitioner', e);
+        }
+      }
+
+      // 2. Submit Resources (Simple version for wizard)
+      for (const r of addedResources) {
+        try {
+          const { error } = await supabase
+            .from('research_documents')
+            .insert({
+              organization_id: context.orgData?.id,
+              uploaded_by_user_id: context.userId,
+              title: r.title,
+              description: r.description,
+              file_url: r.url || '', // Links stored in URL field for now
+              file_name: 'External Link',
+              research_type: r.resource_type,
+              topics: r.tags,
+              visibility_level: 'network'
+            });
+          if (error) console.error('Failed to save resource', r.title, error);
+        } catch (e) {
+          console.error('Error saving resource', e);
+        }
+      }
+
+      // 3. Submit Insights
       await submitRegionalInsight({
         organization_id: context.orgData?.id,
         user_id: context.userId,
@@ -120,29 +164,7 @@ export function AnnualSurveyWizard() {
         answers: insights
       });
 
-      // 2. Submit Practitioners
-      for (const p of addedPractitioners) {
-        await fetch('/api/service-providers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...p,
-            userId: context.userId,
-            organizationId: context.orgData?.id,
-            offers_remote: true,
-            is_accepting_clients: true
-          }),
-        });
-      }
-
-      // 3. Submit Resources (Links only for now via simple wizard)
-      for (const r of addedResources) {
-        // We need an API route that handles links or we use research table with null file
-        // For prototype simplicity, we'll log them or defer to full upload page
-        console.log('Added resource:', r);
-      }
-
-      // 4. Update Timestamps
+      // 4. Update Timestamps (Gate Unlocking)
       await supabase
         .from('users')
         .update({ last_annual_survey_at: new Date().toISOString() })
@@ -316,8 +338,9 @@ export function AnnualSurveyWizard() {
             </div>
             <div className="space-y-3">
               <h2 className="text-3xl font-serif text-[#2C3E50]">Thank you for your presence</h2>
-              <p className="text-lg text-[#5D6D7E] max-w-md mx-auto">
-                Your voice has been added to the collective. You now have full access to the 2026 platform.
+              <p className="text-lg text-[#5D6D7E] max-w-md mx-auto leading-relaxed">
+                Your voice has been added to the collective. 
+                You are the <span className="font-bold text-[#2C3E50]">{context?.totalContributors || 1}th</span> person to contribute this season.
               </p>
             </div>
             

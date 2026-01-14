@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { isSuperAdmin } from '@/lib/utils/admin'
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
@@ -17,8 +18,7 @@ export default async function AdminDashboardPage() {
     .eq('id', user.id)
     .single()
 
-  // TODO: Update this check based on your actual admin domain
-  const isWBPAdmin = userProfile?.email.endsWith('@wellbeingproject.org')
+  const isWBPAdmin = isSuperAdmin(userProfile?.email)
 
   if (!isWBPAdmin) {
     return (

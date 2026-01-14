@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { SURVEY_TEMPLATES } from '@/utils/constants/surveys'
+import { isSuperAdmin } from '@/lib/utils/admin'
 
 export default async function AdminSurveysPage() {
   const supabase = await createClient()
@@ -18,9 +19,7 @@ export default async function AdminSurveysPage() {
     .eq('id', user.id)
     .single()
 
-  const isWBPAdmin = userProfile?.email.endsWith('@wellbeingproject.org')
-
-  if (!isWBPAdmin) {
+  if (!isSuperAdmin(userProfile?.email)) {
     redirect('/admin')
   }
 

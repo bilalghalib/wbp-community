@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { SeasonManager } from '@/components/admin/season-manager';
+import { isSuperAdmin } from '@/lib/utils/admin';
 
 export default async function SeasonsPage() {
   const supabase = await createClient();
@@ -12,14 +13,13 @@ export default async function SeasonsPage() {
   }
 
   // Check if WBP Super Admin
-  const { data: membership } = await supabase
-    .from('organization_memberships')
-    .select('organizations!inner(slug)')
-    .eq('user_id', user.id)
+  const { data: userProfile } = await supabase
+    .from('users')
+    .select('email')
+    .eq('id', user.id)
     .single();
 
-  // For prototype, only 'wellbeing-project' org members can access admin
-  if (membership?.organizations?.slug !== 'wellbeing-project') {
+  if (!isSuperAdmin(userProfile?.email)) {
     redirect('/dashboard');
   }
 

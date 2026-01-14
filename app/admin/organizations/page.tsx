@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { isSuperAdmin } from '@/lib/utils/admin'
 
 type PageProps = {
   searchParams: { search?: string; status?: string }
@@ -21,9 +22,7 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
     .eq('id', user.id)
     .single()
 
-  const isWBPAdmin = userProfile?.email.endsWith('@wellbeingproject.org')
-
-  if (!isWBPAdmin) {
+  if (!isSuperAdmin(userProfile?.email)) {
     redirect('/admin')
   }
 
