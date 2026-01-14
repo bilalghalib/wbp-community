@@ -108,13 +108,31 @@ export function AnnualSurveyWizard() {
   }, []);
 
   const handleFinalSubmit = async (insights: Record<string, string>) => {
-    if (!context) return;
+    if (!context || !context.seasonId) return;
     setSubmitting(true);
     
     try {
       const supabase = createClient();
       
-      // 1. Submit Practitioners
+      // 1. Submit Insights
+      await submitRegionalInsight({
+        organization_id: context.orgData?.id,
+        user_id: context.userId,
+        region: context.orgData?.location_region || 'Unknown',
+        sector: 'Unknown',
+        answers: insights
+      });
+
+      // Record in audit trail
+      await supabase.from('annual_survey_submissions').insert({
+        season_id: context.seasonId,
+        organization_id: context.orgData?.id,
+        user_id: context.userId,
+        submission_type: 'insights',
+        payload: insights
+      });
+
+      // 2. Submit Practitioners
       for (const p of addedPractitioners) {
         try {
           const res = await fetch('/api/service-providers', {
@@ -127,42 +145,53 @@ export function AnnualSurveyWizard() {
               is_visible: true
             }),
           });
-          if (!res.ok) console.error('Failed to save practitioner', p.full_name);
+          if (res.ok) {
+            const data = await res.json();
+            await supabase.from('annual_survey_submissions').insert({
+              season_id: context.seasonId,
+              organization_id: context.orgData?.id,
+              user_id: context.userId,
+              submission_type: 'practitioner',
+              payload: { practitioner_id: data.providerId, ...p }
+            });
+          }
         } catch (e) {
           console.error('Error saving practitioner', e);
         }
       }
 
-      // 2. Submit Resources (Simple version for wizard)
+      // 3. Submit Resources
       for (const r of addedResources) {
         try {
-          const { error } = await supabase
+          const { data: resource, error } = await supabase
             .from('research_documents')
             .insert({
               organization_id: context.orgData?.id,
               uploaded_by_user_id: context.userId,
               title: r.title,
               description: r.description,
-              file_url: r.url || '', // Links stored in URL field for now
+              file_url: r.url || '',
               file_name: 'External Link',
               research_type: r.resource_type,
               topics: r.tags,
               visibility_level: 'network'
+            })
+            .select()
+            .single();
+
+          if (!error && resource) {
+            await supabase.from('annual_survey_submissions').insert({
+              season_id: context.seasonId,
+              organization_id: context.orgData?.id,
+              user_id: context.userId,
+              submission_type: 'resource',
+              payload: { resource_id: resource.id, ...r }
             });
-          if (error) console.error('Failed to save resource', r.title, error);
+          }
         } catch (e) {
           console.error('Error saving resource', e);
         }
       }
-
-      // 3. Submit Insights
-      await submitRegionalInsight({
-        organization_id: context.orgData?.id,
-        user_id: context.userId,
-        region: context.orgData?.location_region || 'Unknown',
-        sector: 'Unknown',
-        answers: insights
-      });
 
       // 4. Update Timestamps (Gate Unlocking)
       await supabase
@@ -171,9 +200,24 @@ export function AnnualSurveyWizard() {
         .eq('id', context.userId);
 
       if (context.isAdmin && context.orgData?.id) {
+        // Record org confirmation in audit trail
+        await supabase.from('annual_survey_submissions').insert({
+          season_id: context.seasonId,
+          organization_id: context.orgData.id,
+          user_id: context.userId,
+          submission_type: 'org_profile',
+          payload: context.orgData
+        });
+
+        // Persist updates to the organization record
         await supabase
           .from('organizations')
-          .update({ last_annual_survey_at: new Date().toISOString() })
+          .update({ 
+            name: context.orgData.name,
+            website_url: context.orgData.website_url,
+            description: context.orgData.description,
+            last_annual_survey_at: new Date().toISOString() 
+          })
           .eq('id', context.orgData.id);
       }
 
@@ -288,7 +332,10 @@ export function AnnualSurveyWizard() {
         {currentStep === Step.Organization && (
           <OrgProfileForm 
             initialData={context?.orgData} 
-            onConfirm={next} 
+            onConfirm={(updatedData) => {
+              setContext(prev => prev ? { ...prev, orgData: updatedData } : null);
+              next();
+            }} 
             onBack={back} 
           />
         )}
