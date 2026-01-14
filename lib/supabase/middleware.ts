@@ -14,11 +14,74 @@ const ALLOWED_WHILE_GATED = [
   '/admin/',        // WBP admins need to manage the platform
   '/_next/',        // Next.js internal files
   '/favicon.ico',
+  '/accept-invite', // Allow accepting invitations
+  '/welcome-admin', // Welcome page for new admins
 ]
 
 export async function updateSession(request: NextRequest) {
-  // ... (rest of the setup code)
-  
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+        },
+      },
+    }
+  )
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const pathname = request.nextUrl.pathname
+
+  // If not logged in or on an allowed route, skip gate check
+  if (!user || ALLOWED_WHILE_GATED.some(route => pathname.startsWith(route))) {
+    return response
+  }
+
   // Check annual survey gate
   try {
     // We call a single RPC that handles all the logic (Season active? User completed? Org completed?)
@@ -28,11 +91,6 @@ export async function updateSession(request: NextRequest) {
     if (gateError) throw gateError;
 
     if (gateStatus?.is_blocked) {
-      // Prevent infinite redirect if they are already on the survey page
-      if (pathname === '/annual-survey') {
-        return response
-      }
-      
       // Redirect to annual survey
       const redirectUrl = new URL('/annual-survey', request.url)
       return NextResponse.redirect(redirectUrl)
