@@ -50,4 +50,47 @@ To create a "Springboard" platform for the Wellbeing Project community (approx. 
 -   **User:** Bilal Ghalib.
 -   **Project Lead:** Ale (Wellbeing Project).
 -   **Key Contact:** Aaron (Vision/Leadership).
+-   **Coordinator:** Joining February 2026 (junior role for outreach/scheduling).
 -   **Values:** "White Glove" support (human connection) initially, automated later. Idiomatic code, clean architecture.
+
+## Development Track Record
+
+### Git History (25 commits since Jan 2025)
+```
+5ea50b4 toot (Jan 14, 2026)
+87eb58d fix: handle polymorphic organization response in survey deploy page
+4040ddf feat: add Security Explained page with mermaid diagrams
+912a071 feat: add FAQ/Community Guidelines page with liability disclaimer
+fd66297 Add service provider photo upload and edit functionality (Dec 2025)
+94c76ac Add comprehensive testing suite and development documentation
+6cb8ad2 Complete Phase 1C: Survey Tool with privacy-first aggregate analytics
+b7cda86 Complete Phase 1B: Research Repository with PDF uploads
+15f9182 Complete Phase 1A Week 3-4: Organization Management + WBP Admin Panel
+71c2e29 Complete Phase 1A Week 2: Service Provider Registry with trust signals
+f1f2d66 Implement complete Phase 1 scaffolding: Database + Next.js foundation (Nov 2025)
+```
+
+### What's Been Built (Phase 1 Complete)
+- ✅ Database schema (11 tables) with comprehensive RLS policies
+- ✅ Authentication (email/password via Supabase)
+- ✅ Organization management (create, members, roles)
+- ✅ Service Provider Registry (add, search, recommendations, trust signals)
+- ✅ Research Repository (PDF upload, tagging, full-text search)
+- ✅ Survey Tool (deploy, respond, aggregate-only results)
+- ✅ WBP Admin Panel (manage orgs, view activity)
+- ✅ FAQ & Security Explained pages
+
+## Key Resources
+
+-   `/Research/mvp-design-plan.md` - Original MVP specification
+-   `/Research/vx-audit-report.md` - Values alignment analysis
+-   `/Research/Alehandra-Bilal-Friday-Jan-9-2026.md` - Latest planning meeting notes
+-   `/Research/phase-1*` - Implementation guides for each phase
+
+## Budget Summary
+| Phase | Budget | Description |
+|-------|--------|-------------|
+| Phase 1 | ~€2,000 | Build + internal testing |
+| Phase 2 | ~€1,500 | 30 participant testing |
+| Phase 3 | ~€2,500 | Scaled soft launch |
+| **Total** | **~€6,000** | Through Week 13 |

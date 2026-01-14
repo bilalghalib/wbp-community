@@ -64,3 +64,29 @@ Access to the platform is granted annually through an act of contribution. Users
 -   `/supabase`: Database migrations and types.
 -   `/e2e`: Playwright end-to-end tests.
 -   `/Research`: Project documentation, interview transcripts, and strategic planning documents.
+
+## Development History
+
+### What's Been Built (Phase 1 Complete - Nov 2025)
+- ✅ 11-table database schema with RLS policies
+- ✅ Service Provider Registry with trust signals
+- ✅ Research Repository with PDF uploads & full-text search
+- ✅ Survey Tool with aggregate-only analytics
+- ✅ Organization management & WBP Admin Panel
+- ✅ FAQ & Security Explained pages
+
+### Recent Commits
+| Date | Commit | Description |
+|------|--------|-------------|
+| Jan 2026 | `87eb58d` | Fix polymorphic org response in survey deploy |
+| Jan 2026 | `4040ddf` | Security Explained page with diagrams |
+| Jan 2026 | `912a071` | FAQ/Community Guidelines page |
+| Dec 2025 | `fd66297` | Service provider photo upload |
+| Nov 2025 | `6cb8ad2` | Phase 1C: Survey Tool complete |
+| Nov 2025 | `b7cda86` | Phase 1B: Research Repository complete |
+| Nov 2025 | `f1f2d66` | Phase 1 scaffolding: Database + Next.js |
+
+## Resources
+-   **MVP Plan:** `/Research/mvp-design-plan.md`
+-   **Values Audit:** `/Research/vx-audit-report.md`
+-   **Meeting Notes:** `/Research/Alehandra-Bilal-Friday-Jan-9-2026.md`
