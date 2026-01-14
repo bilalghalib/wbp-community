@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { getUserImpactStats, ImpactStats, getActiveSeason } from '@/lib/services/season-service';
+import { submitRegionalInsight } from '@/lib/services/insights-service';
 import { createClient } from '@/lib/supabase/client';
+import { OrgProfileForm } from './steps/org-profile-form';
+import { InsightsForm } from './steps/insights-form';
 
 enum Step {
   Welcome = 0,
@@ -20,8 +24,10 @@ interface UserContext {
   isFirstTime: boolean;
   hasSharedPractitioners: boolean;
   hasSharedResources: boolean;
-  practitionerViewCount: number;
-  resourceDownloadCount: number;
+  stats: ImpactStats | null;
+  orgData: any;
+  userId: string;
+  seasonId: string | null;
   communityStats: {
     totalPractitioners: number;
     totalResources: number;
@@ -33,6 +39,7 @@ export function AnnualSurveyWizard() {
   const [currentStep, setCurrentStep] = useState<Step>(Step.Welcome);
   const [context, setContext] = useState<UserContext | null>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -40,66 +47,95 @@ export function AnnualSurveyWizard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Check Admin Role
+      // 1. Get Season
+      const season = await getActiveSeason();
+
+      // 2. Check Membership & Role
       const { data: membership } = await supabase
         .from('organization_memberships')
-        .select('role, organization_id')
+        .select('role, organization_id, organizations(*)')
         .eq('user_id', user.id)
         .single();
-
+      
       const isAdmin = membership?.role === 'primary_admin' || membership?.role === 'backup_admin';
 
-      // Check if user has shared anything before
+      // 3. Check stats & participation
+      const stats = await getUserImpactStats();
+      
       const { count: practitionerCount } = await supabase
         .from('service_provider_recommendations')
         .select('*', { count: 'exact', head: true })
-        .eq('recommended_by', user.id);
+        .eq('recommended_by_user_id', user.id);
 
       const { count: resourceCount } = await supabase
         .from('research_documents')
         .select('*', { count: 'exact', head: true })
-        .eq('uploaded_by', user.id);
+        .eq('uploaded_by_user_id', user.id);
 
-      const hasSharedPractitioners = (practitionerCount || 0) > 0;
-      const hasSharedResources = (resourceCount || 0) > 0;
-      const isFirstTime = !hasSharedPractitioners && !hasSharedResources;
-
-      // Get community stats for first-time users
-      const { count: totalPractitioners } = await supabase
-        .from('service_providers')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: totalResources } = await supabase
-        .from('research_documents')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: totalOrganizations } = await supabase
-        .from('organizations')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
-
-      // Get engagement stats for returning users (simplified - would use RPC in production)
-      // For now, using placeholder logic
-      const practitionerViewCount = hasSharedPractitioners ? Math.floor(Math.random() * 10) + 1 : 0;
-      const resourceDownloadCount = hasSharedResources ? Math.floor(Math.random() * 5) + 1 : 0;
+      // 4. Community Stats
+      const { count: totalPractitioners } = await supabase.from('service_providers').select('*', { count: 'exact', head: true });
+      const { count: totalResources } = await supabase.from('research_documents').select('*', { count: 'exact', head: true });
+      const { count: totalOrgs } = await supabase.from('organizations').select('*', { count: 'exact', head: true }).eq('is_active', true);
 
       setContext({
+        userId: user.id,
+        seasonId: season?.id || null,
         isAdmin,
-        isFirstTime,
-        hasSharedPractitioners,
-        hasSharedResources,
-        practitionerViewCount,
-        resourceDownloadCount,
+        orgData: membership?.organizations,
+        stats,
+        isFirstTime: (practitionerCount || 0) === 0 && (resourceCount || 0) === 0,
+        hasSharedPractitioners: (practitionerCount || 0) > 0,
+        hasSharedResources: (resourceCount || 0) > 0,
         communityStats: {
           totalPractitioners: totalPractitioners || 0,
           totalResources: totalResources || 0,
-          totalOrganizations: totalOrganizations || 0,
+          totalOrganizations: totalOrgs || 0,
         }
       });
+      
       setLoading(false);
     }
     loadData();
   }, []);
+
+  const handleFinalSubmit = async (insights: Record<string, string>) => {
+    if (!context) return;
+    setSubmitting(true);
+    
+    try {
+      const supabase = createClient();
+      
+      // 1. Record Regional Insights
+      await submitRegionalInsight({
+        organization_id: context.orgData?.id,
+        user_id: context.userId,
+        region: context.orgData?.location_region || 'Unknown',
+        sector: 'Unknown', // Could add sector to org data
+        answers: insights
+      });
+
+      // 2. Update User's last survey date
+      await supabase
+        .from('users')
+        .update({ last_annual_survey_at: new Date().toISOString() })
+        .eq('id', context.userId);
+
+      // 3. Update Organization's last survey date (if admin)
+      if (context.isAdmin && context.orgData?.id) {
+        await supabase
+          .from('organizations')
+          .update({ last_annual_survey_at: new Date().toISOString() })
+          .eq('id', context.orgData.id);
+      }
+
+      setCurrentStep(Step.Complete);
+    } catch (error) {
+      console.error('Submission failed', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const progress = (currentStep / Step.Complete) * 100;
 
@@ -119,300 +155,171 @@ export function AnnualSurveyWizard() {
     setCurrentStep(Math.max(prevStep, Step.Welcome));
   };
 
-  if (loading) {
-    return (
-      <div className="p-12 text-center text-gray-500">
-        Loading...
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center p-24 text-center space-y-4">
+      <div className="w-8 h-8 border-4 border-[#2C3E50] border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-500 font-serif">Preparing the gathering...</p>
+    </div>
+  );
+
+  const hasPersonalImpact = (context?.stats?.provider_views || 0) > 0 || (context?.stats?.resource_downloads || 0) > 0;
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-serif text-[#2C3E50]">2026 Annual Contribution</h1>
-        <p className="text-gray-500 mt-2">
-          {currentStep === Step.Welcome
-            ? "A moment to give and receive"
-            : `Step ${currentStep} of ${context?.isAdmin ? 5 : 4}`}
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="mb-12 text-center">
+        <h1 className="text-4xl font-serif text-[#2C3E50] mb-3">The 2026 Gathering</h1>
+        <p className="text-[#5D6D7E] max-w-lg mx-auto leading-relaxed">
+          Welcome. Once a year, we pause to update our collective knowledge and refresh our connection to the network.
         </p>
       </div>
 
-      {currentStep !== Step.Welcome && currentStep !== Step.Complete && (
-        <div className="mb-8">
-          <Progress value={progress} className="h-1.5 bg-gray-100" />
+      <div className="mb-10">
+        <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-gray-400 mb-2 px-1">
+          <span>{currentStep === Step.Welcome ? 'Welcome' : `Step ${currentStep} of 5`}</span>
+          <span>{Math.round(progress)}% Complete</span>
         </div>
-      )}
+        <Progress value={progress} className="h-1.5 bg-gray-100" />
+      </div>
 
-      <Card className="p-8 min-h-[400px] shadow-sm">
-
-        {/* WELCOME STEP */}
+      <Card className="p-10 border-none shadow-xl shadow-gray-200/50 rounded-2xl bg-white min-h-[500px]">
         {currentStep === Step.Welcome && (
-          <div className="space-y-8">
-
-            {/* FIRST-TIME USER */}
-            {context?.isFirstTime && (
-              <>
-                <div className="text-center">
-                  <h2 className="text-2xl font-serif text-[#2C3E50] mb-4">
-                    Welcome to the community
-                  </h2>
-                  <p className="text-gray-600 max-w-xl mx-auto">
-                    This platform runs on generosity. Everything here — every practitioner
-                    recommendation, every resource, every insight — came from someone
-                    who wanted to make it easier for the next person.
+          <div className="space-y-10 animate-in fade-in duration-700">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-serif text-[#2C3E50]">
+                {hasPersonalImpact ? 'Your Ripple Effect' : 'Joining the Collective'}
+              </h2>
+              
+              {hasPersonalImpact ? (
+                <div className="py-6 space-y-4 max-w-xl mx-auto">
+                  <p className="text-lg text-[#5D6D7E]">
+                    Since your last visit, a few people found their way to the practitioners you recommended, 
+                    and your resources supported colleagues across the network.
                   </p>
-                </div>
-
-                <div className="bg-[#F8F9FA] p-6 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-3">What the community has gathered:</p>
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-semibold text-[#2C3E50]">
-                        {context.communityStats.totalPractitioners}
-                      </div>
-                      <div className="text-xs text-gray-500">practitioners</div>
+                  <div className="flex justify-center gap-12 pt-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-[#2C3E50]">{context?.stats?.provider_views}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-gray-400 mt-1 font-semibold">Provider Views</div>
                     </div>
-                    <div>
-                      <div className="text-2xl font-semibold text-[#2C3E50]">
-                        {context.communityStats.totalResources}
-                      </div>
-                      <div className="text-xs text-gray-500">resources</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-semibold text-[#2C3E50]">
-                        {context.communityStats.totalOrganizations}
-                      </div>
-                      <div className="text-xs text-gray-500">organizations</div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-[#2C3E50]">{context?.stats?.resource_downloads}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-gray-400 mt-1 font-semibold">Downloads</div>
                     </div>
                   </div>
                 </div>
-
-                <div className="bg-[#FFFBEB] border border-[#FEF3C7] p-5 rounded-lg">
-                  <p className="text-sm text-gray-700 italic">
-                    "May I become at all times, both now and forever, a protector of those
-                    without protection, a guide for those who have lost their way..."
+              ) : (
+                <div className="py-6 space-y-6 max-w-xl mx-auto">
+                  <p className="text-lg text-[#5D6D7E]">
+                    You're joining {context?.communityStats.totalPractitioners} practitioners and {context?.communityStats.totalOrganizations} organizations from 17 regions.
                   </p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    — Shantideva, shared in the community
-                  </p>
+                  <div className="bg-[#FFFBEB] border border-[#FEF3C7] p-6 rounded-2xl">
+                    <p className="text-sm text-gray-700 italic leading-relaxed">
+                      "May I become at all times, both now and forever, a protector of those without protection, 
+                      a guide for those who have lost their way..."
+                    </p>
+                    <p className="text-[10px] text-gray-400 mt-3 uppercase tracking-widest font-semibold">— Shantideva</p>
+                  </div>
                 </div>
+              )}
+            </div>
 
-                <div className="text-center">
-                  <p className="text-gray-600 mb-6">
-                    Your contribution helps us understand wellbeing in your region.
-                    What you share becomes part of this living library.
-                  </p>
-                  <Button
-                    onClick={next}
-                    size="lg"
-                    className="bg-[#2C3E50] hover:bg-[#1a252f] text-white px-8"
-                  >
-                    Begin
-                  </Button>
-                </div>
-              </>
-            )}
+            <div className="bg-[#F8FAFB] p-8 rounded-2xl border border-gray-100">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-[#2C3E50] mb-4">The Exchange</h3>
+              <p className="text-sm text-[#5D6D7E] leading-relaxed">
+                By taking a few minutes to share your regional insights and verify your profile, 
+                you unlock full access to the directory and insights dashboard for the 2026 season.
+              </p>
+            </div>
 
-            {/* RETURNING USER */}
-            {!context?.isFirstTime && (
-              <>
-                <div className="text-center">
-                  <h2 className="text-2xl font-serif text-[#2C3E50] mb-4">
-                    Welcome back
-                  </h2>
-                </div>
-
-                <div className="space-y-4 text-gray-600">
-                  <p>Since your last visit:</p>
-                  <ul className="space-y-2 pl-4">
-                    {context?.hasSharedPractitioners && context.practitionerViewCount > 0 && (
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#2C3E50]">•</span>
-                        <span>
-                          {context.practitionerViewCount === 1
-                            ? "Someone found their way to a practitioner you shared"
-                            : `A few people found their way to practitioners you shared`}
-                        </span>
-                      </li>
-                    )}
-                    {context?.hasSharedResources && context.resourceDownloadCount > 0 && (
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#2C3E50]">•</span>
-                        <span>
-                          {context.resourceDownloadCount === 1
-                            ? "Your resource was downloaded by someone in the network"
-                            : "Your resources have been downloaded and shared"}
-                        </span>
-                      </li>
-                    )}
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#2C3E50]">•</span>
-                      <span>
-                        The community continues to grow — now {context?.communityStats.totalOrganizations} organizations strong
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-[#F8F9FA] p-5 rounded-lg">
-                  <p className="text-gray-600 text-sm">
-                    Thank you for what you've already shared. Ready to contribute
-                    your perspective for 2026?
-                  </p>
-                </div>
-
-                <div className="text-center">
-                  <Button
-                    onClick={next}
-                    size="lg"
-                    className="bg-[#2C3E50] hover:bg-[#1a252f] text-white px-8"
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </>
-            )}
+            <div className="flex justify-center pt-4">
+              <Button onClick={next} size="lg" className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-10 py-7 text-lg rounded-xl transition-all shadow-lg shadow-gray-200">
+                Begin Contribution
+              </Button>
+            </div>
           </div>
         )}
 
-        {/* ORGANIZATION STEP (Admin only) */}
         {currentStep === Step.Organization && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">
-                Organization Profile
-              </h2>
-              <p className="text-gray-500">
-                As an admin, please verify your organization's details are current.
-              </p>
-            </div>
-
-            {/* Placeholder for Org Form */}
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 border border-dashed border-gray-200">
-              [Organization Profile Form]
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1a252f]">
-                Confirm & Continue
-              </Button>
-            </div>
-          </div>
+          <OrgProfileForm 
+            initialData={context?.orgData} 
+            onConfirm={next} 
+            onBack={back} 
+          />
         )}
 
-        {/* PRACTITIONERS STEP */}
         {currentStep === Step.Practitioners && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in fade-in duration-500">
             <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">
-                Share a Practitioner
-              </h2>
-              <p className="text-gray-500">
-                Know someone who's been helpful? A therapist, coach, or healer
-                you'd recommend to a colleague?
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                You can manage practitioners you've previously shared from your profile.
-              </p>
+              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">Share a Practitioner?</h2>
+              <p className="text-[#5D6D7E]">Have you worked with someone transformative this year? Your recommendations help the whole network.</p>
+            </div>
+            
+            <div className="h-64 bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 space-y-4">
+              <p className="text-sm text-gray-400 max-w-xs italic">"A recommendation is a vote of confidence in a colleague's work."</p>
+              <Button variant="outline" className="border-gray-300 rounded-xl hover:bg-white transition-colors">Add a Practitioner</Button>
             </div>
 
-            {/* Placeholder for Provider Form */}
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 border border-dashed border-gray-200">
-              [Practitioner Form - Optional]
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <div className="space-x-2">
-                <Button variant="ghost" onClick={next} className="text-gray-500">
-                  Skip for now
-                </Button>
-                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1a252f]">
-                  Continue
-                </Button>
+            <div className="flex justify-between mt-12">
+              <Button variant="ghost" onClick={back} className="text-gray-400">Back</Button>
+              <div className="space-x-3">
+                <Button variant="ghost" onClick={next} className="text-gray-500">Skip for now</Button>
+                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-8 rounded-xl">Next: Resources</Button>
               </div>
             </div>
           </div>
         )}
 
-        {/* RESOURCES STEP */}
         {currentStep === Step.Resources && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in fade-in duration-500">
             <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">
-                Share a Resource
-              </h2>
-              <p className="text-gray-500">
-                A toolkit, article, or guide that's been valuable in your work?
-              </p>
+              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">Share a Resource?</h2>
+              <p className="text-[#5D6D7E]">Toolkits, reports, or findings that could support other organizations.</p>
+            </div>
+            
+            <div className="h-64 bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-center p-8 space-y-4">
+              <p className="text-sm text-gray-400 max-w-xs italic">"Building a reservoir of knowledge for the field."</p>
+              <Button variant="outline" className="border-gray-300 rounded-xl hover:bg-white transition-colors">Upload Resource</Button>
             </div>
 
-            {/* Placeholder for Resource Form */}
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 border border-dashed border-gray-200">
-              [Resource Form - Optional]
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <div className="space-x-2">
-                <Button variant="ghost" onClick={next} className="text-gray-500">
-                  Skip for now
-                </Button>
-                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1a252f]">
-                  Continue
-                </Button>
+            <div className="flex justify-between mt-12">
+              <Button variant="ghost" onClick={back} className="text-gray-400">Back</Button>
+              <div className="space-x-3">
+                <Button variant="ghost" onClick={next} className="text-gray-500">Skip for now</Button>
+                <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-8 rounded-xl">Next: Insights</Button>
               </div>
             </div>
           </div>
         )}
 
-        {/* INSIGHTS STEP */}
         {currentStep === Step.Insights && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">
-                Regional Insights
-              </h2>
-              <p className="text-gray-500">
-                This is the heart of the contribution. Your perspective helps us
-                understand wellbeing across regions and contexts.
-              </p>
+          <div>
+            <div className="mb-10">
+              <h2 className="text-2xl font-serif text-[#2C3E50] mb-2">Regional Insights</h2>
+              <p className="text-[#5D6D7E]">Help us understand the state of wellbeing in your context. These reflections shape our annual report.</p>
             </div>
-
-            {/* Placeholder for 8-Question Form */}
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 border border-dashed border-gray-200">
-              [8 Insight Questions - Required]
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={back}>Back</Button>
-              <Button onClick={next} className="bg-[#2C3E50] hover:bg-[#1a252f]">
-                Submit
-              </Button>
-            </div>
+            <InsightsForm 
+              onSubmit={handleFinalSubmit} 
+              onBack={back} 
+              isSubmitting={submitting}
+            />
           </div>
         )}
 
-        {/* COMPLETE STEP */}
         {currentStep === Step.Complete && (
-          <div className="text-center py-12 space-y-6">
-            <h2 className="text-3xl font-serif text-[#2C3E50]">
-              Thank you
-            </h2>
-            <p className="text-gray-600 max-w-md mx-auto">
-              Your contribution is now part of the commons.
-              The insights you and others share will help shape
-              this year's understanding of wellbeing across regions.
-            </p>
-            <div className="pt-4">
-              <Button
-                size="lg"
-                onClick={() => window.location.href = '/dashboard'}
-                className="bg-[#2C3E50] hover:bg-[#1a252f] text-white px-8"
-              >
+          <div className="text-center space-y-8 py-10 animate-in zoom-in duration-700">
+            <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto shadow-inner">
+              <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div className="space-y-3">
+              <h2 className="text-3xl font-serif text-[#2C3E50]">Thank you for your presence</h2>
+              <p className="text-lg text-[#5D6D7E] max-w-md mx-auto">
+                Your voice has been added to the collective. You now have full access to the 2026 platform.
+              </p>
+            </div>
+            
+            <div className="pt-6">
+              <Button size="lg" onClick={() => window.location.href = '/dashboard'} className="bg-[#2C3E50] hover:bg-[#1A252F] text-white px-12 py-7 rounded-xl transition-all shadow-lg shadow-gray-200">
                 Enter the Platform
               </Button>
             </div>
