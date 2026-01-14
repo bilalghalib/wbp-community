@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Springboard: Security & Privacy Explained</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+    <style>
+        body { font-family: ui-sans-serif, system-ui, sans-serif; }
+        .mermaid { display: flex; justify-content: center; margin: 2rem 0; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased pb-20">
+
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Header -->
+        <header class="mb-12 border-b border-gray-200 pb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">How We Keep You Safe</h1>
+            <p class="text-xl text-gray-600">A simple guide to privacy and security on the Springboard platform.</p>
+        </header>
+
+        <!-- Section 1: The Core Promise -->
+        <section class="bg-white shadow-sm rounded-xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">1. Our Core Promise</h2>
+            <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+                Your trust is our most valuable asset. We believe that for you to be truly open about your wellbeing, 
+                you need to know exactly where your data goes—and where it doesn't.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h3 class="font-bold text-green-900 mb-2 text-lg">We Do ✅</h3>
+                    <ul class="list-disc pl-5 text-green-800 space-y-2">
+                        <li>Protect your privacy and dignity at all times.</li>
+                        <li>Explain exactly what we collect and why.</li>
+                        <li>Use data only to help the community grow.</li>
+                    </ul>
+                </div>
+                <div class="bg-red-50 p-6 rounded-lg">
+                    <h3 class="font-bold text-red-900 mb-2 text-lg">We Do Not ❌</h3>
+                    <ul class="list-disc pl-5 text-red-800 space-y-2">
+                        <li>Collect information we don't need.</li>
+                        <li>Track your individual clicks or searches.</li>
+                        <li>Sell your data or share it with outsiders.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Blender -->
+        <section class="bg-white shadow-sm rounded-xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">2. Surveys: The "Blender" Approach</h2>
+            <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+                Think of our survey system like a blender. We take answers from many people and mix them together. 
+                We only look at the "smoothie" (the trends), never the individual ingredients (you).
+            </p>
+            
+            <div class="mermaid">
+                graph LR
+                    U1[You] -->|Confidential| V[Secure Vault]
+                    U2[Peer] -->|Confidential| V
+                    U3[Colleague] -->|Confidential| V
+                    V -->|Mix & Anonymize| B{The Blender}
+                    B -->|Aggregate Trends| R[Group Report]
+                    R -->|View| A[Org Admin]
+                    
+                    style V fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+                    style B fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+                    style R fill:#fff7ed,stroke:#ea580c,stroke-width:2px
+            </div>
+
+            <div class="space-y-4 text-gray-700">
+                <p><strong>Strict Anonymity:</strong> We only create reports if there are <strong>at least 7 people</strong> in the group. If the group is smaller, the report is locked to protect your identity.</p>
+                <p><strong>Separation:</strong> Your email and login info are kept in a separate digital building from your survey answers. There is no technical key to link them back together.</p>
+            </div>
+        </section>
+
+        <!-- Section 3: Visibility -->
+        <section class="bg-white shadow-sm rounded-xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">3. Who Sees What?</h2>
+            <p class="text-lg text-gray-700 mb-6">We use three levels of visibility to keep sensitive data hidden.</p>
+            
+            <div class="mermaid">
+                graph TD
+                    subgraph "Public Network"
+                        P1[Practitioner Bios]
+                        P2[Coach Contact Info]
+                    end
+                    
+                    subgraph "Your Organization"
+                        O1[Team Resources]
+                        O2[Group Survey Trends]
+                    end
+                    
+                    subgraph "Strictly Private (NO ONE SEES)"
+                        S1[Individual Survey Answers]
+                        S2[Your Search History]
+                        S3[Private Profile Data]
+                    end
+                    
+                    style S1 fill:#fee2e2,stroke:#ef4444
+                    style S2 fill:#fee2e2,stroke:#ef4444
+                    style S3 fill:#fee2e2,stroke:#ef4444
+                    style O1 fill:#fef9c3,stroke:#eab308
+                    style O2 fill:#fef9c3,stroke:#eab308
+            </div>
+        </section>
+
+        <!-- Section 4: Admin Limits -->
+        <section class="bg-white shadow-sm rounded-xl p-8 mb-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">4. Even Admins Have Limits</h2>
+            <p class="text-lg text-gray-700 mb-6">The people who run the platform (TWP Admins) are there to keep things running, not to watch you.</p>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <h4 class="font-bold mb-2">Admins Can:</h4>
+                    <ul class="list-disc pl-4 space-y-1">
+                        <li>Create surveys</li>
+                        <li>Delete old accounts</li>
+                        <li>See global totals</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg md:col-span-2">
+                    <h4 class="font-bold mb-2 text-red-700">Admins CANNOT:</h4>
+                    <ul class="list-disc pl-4 space-y-1 text-red-900">
+                        <li>View individual survey responses.</li>
+                        <li>Track specific user behavior on the platform.</li>
+                        <li>View private data beyond basic account info (email).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-16 text-center text-gray-500 text-sm">
+            <p>Generated for The Wellbeing Project Community.</p>
+            <p class="mt-1">Based on the <i>Confidentiality and Security Considerations</i> document.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
