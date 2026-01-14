@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import MemberList from '@/components/organizations/member-list'
 import InviteMemberForm from '@/components/organizations/invite-member-form'
+import PendingInvitations from '@/components/organizations/pending-invitations'
 
 export default async function MembersPage({
   params,
@@ -86,6 +87,14 @@ export default async function MembersPage({
           <div className="bg-white rounded-lg shadow mb-8 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Invite New Member</h2>
             <InviteMemberForm organizationId={org.id} organizationName={org.name} />
+          </div>
+        )}
+
+        {/* Pending Invitations (Admin Only) */}
+        {isAdmin && (
+          <div className="bg-white rounded-lg shadow mb-8 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Invitations</h2>
+            <PendingInvitations organizationId={org.id} />
           </div>
         )}
 

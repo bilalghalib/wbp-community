@@ -123,12 +123,20 @@ export default async function AdminOrganizationsPage({ searchParams }: PageProps
               Manage and monitor all organizations in the network
             </p>
           </div>
-          <Link
-            href="/admin/organizations/new"
-            className="px-4 py-2 bg-[#2C3E50] text-white rounded-lg text-sm font-medium hover:bg-[#1a252f] transition-colors"
-          >
-            + Add Organization
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/admin/organizations/import"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              Import CSV
+            </Link>
+            <Link
+              href="/admin/organizations/new"
+              className="px-4 py-2 bg-[#2C3E50] text-white rounded-lg text-sm font-medium hover:bg-[#1a252f] transition-colors"
+            >
+              + Add Organization
+            </Link>
+          </div>
         </div>
 
         {/* Stats Grid */}

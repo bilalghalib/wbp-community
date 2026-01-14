@@ -1,18 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
+import crypto from 'crypto'
+
+// Default invitation expiry: 7 days
+const INVITATION_EXPIRY_DAYS = 7
 
 export async function POST(request: Request) {
   try {
-    // Check for secret key (prefer new format, support legacy)
-    if (!process.env.SUPABASE_SECRET_KEY && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) is not set')
-      return NextResponse.json(
-        { error: 'Server configuration error. Please add SUPABASE_SECRET_KEY to your .env.local file. Get it from Supabase Dashboard → Settings → API → Secret key.' },
-        { status: 500 }
-      )
-    }
-
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -40,43 +35,34 @@ export async function POST(request: Request) {
       )
     }
 
-    // Use admin client for auth operations
-    let adminClient
-    try {
-      adminClient = createAdminClient()
-    } catch (error) {
-      console.error('Failed to create admin client:', error)
-      return NextResponse.json(
-        { error: error instanceof Error ? error.message : 'Server configuration error' },
-        { status: 500 }
-      )
-    }
-    
-    // Check if user already exists in auth.users
-    const { data: existingAuthUser, error: listUsersError } = await adminClient.auth.admin.listUsers()
-    
-      if (listUsersError) {
-        console.error('Error listing users:', listUsersError)
-        return NextResponse.json(
-          { error: 'Failed to check existing users. Please verify your SUPABASE_SECRET_KEY is correct.' },
-          { status: 500 }
-        )
-      }
-    
-    const authUser = existingAuthUser?.users.find(u => u.email === email)
+    // Check if user already has an active membership
+    const { data: existingMembership } = await supabase
+      .from('organization_memberships')
+      .select(`
+        id,
+        is_active,
+        user:users(email)
+      `)
+      .eq('organization_id', organizationId)
+      .single()
 
-    let userId: string
+    // Check via email in users table
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email.toLowerCase())
+      .single()
 
-    if (authUser) {
-      // User exists - check if already a member of this org
-      const { data: existingMembership } = await supabase
+    if (existingUser) {
+      // Check if this user is already a member
+      const { data: membership } = await supabase
         .from('organization_memberships')
         .select('id, is_active')
         .eq('organization_id', organizationId)
-        .eq('user_id', authUser.id)
+        .eq('user_id', existingUser.id)
         .single()
 
-      if (existingMembership && existingMembership.is_active) {
+      if (membership?.is_active) {
         return NextResponse.json(
           { error: 'This person is already a member of this organization' },
           { status: 400 }
@@ -84,90 +70,73 @@ export async function POST(request: Request) {
       }
 
       // Reactivate if previously removed
-      if (existingMembership && !existingMembership.is_active) {
+      if (membership && !membership.is_active) {
         await supabase
           .from('organization_memberships')
           .update({ is_active: true, role })
-          .eq('id', existingMembership.id)
+          .eq('id', membership.id)
+
+        await supabase.from('activity_logs').insert({
+          user_id: user.id,
+          organization_id: organizationId,
+          action_type: 'member.reactivated',
+          resource_type: 'organization_membership',
+          details: { invited_email: email, role },
+        })
 
         return NextResponse.json({ success: true, message: 'Member reactivated' })
       }
-
-      userId = authUser.id
-
-      // Create user profile if doesn't exist
-      const { data: existingProfile } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', userId)
-        .single()
-
-      if (!existingProfile) {
-        await supabase.from('users').insert({
-          id: userId,
-          email,
-          full_name,
-          email_confirmed_at: authUser.email_confirmed_at,
-        })
-      }
-    } else {
-      // Create new user in Supabase Auth
-      // Note: In production, you'd send an invitation email instead
-      // For now, creating a user with a temporary password they'll need to reset
-      const { data: newAuthUser, error: authError } = await adminClient.auth.admin.createUser({
-        email,
-        email_confirm: true, // Auto-confirm for MVP
-        user_metadata: { full_name },
-      })
-
-      if (authError || !newAuthUser.user) {
-        console.error('Error creating auth user:', authError)
-        console.error('Auth error details:', {
-          message: authError?.message,
-          status: authError?.status,
-          code: authError?.code,
-        })
-        
-        // Provide more helpful error message
-        if (authError?.status === 401) {
-          return NextResponse.json(
-            { error: 'Invalid secret key. Please check your SUPABASE_SECRET_KEY in .env.local. Make sure you copied the Secret key (sb_secret_...), not the Publishable key.' },
-            { status: 500 }
-          )
-        }
-        
-        return NextResponse.json(
-          { error: authError?.message || 'Failed to create user account' },
-          { status: 500 }
-        )
-      }
-
-      userId = newAuthUser.user.id
-
-      // Create user profile
-      await supabase.from('users').insert({
-        id: userId,
-        email,
-        full_name,
-        email_confirmed_at: new Date().toISOString(),
-      })
     }
 
-    // Create organization membership
-    const { error: membershipError } = await supabase
-      .from('organization_memberships')
-      .insert({
-        organization_id: organizationId,
-        user_id: userId,
-        role,
-        invited_by_user_id: user.id,
-        invitation_accepted_at: authUser ? new Date().toISOString() : null, // Auto-accept if existing user
-      })
+    // Check if there's already a pending invitation for this email
+    const { data: existingInvitation } = await supabase
+      .from('invitation_tokens')
+      .select('id, expires_at')
+      .eq('organization_id', organizationId)
+      .eq('email', email.toLowerCase())
+      .is('accepted_at', null)
+      .is('revoked_at', null)
+      .single()
 
-    if (membershipError) {
-      console.error('Error creating membership:', membershipError)
+    if (existingInvitation) {
+      // Check if it's still valid
+      if (new Date(existingInvitation.expires_at) > new Date()) {
+        return NextResponse.json(
+          { error: 'An invitation is already pending for this email. You can resend it from the Pending Invitations list.' },
+          { status: 400 }
+        )
+      }
+      // If expired, we'll revoke it and create a new one
+      await supabase
+        .from('invitation_tokens')
+        .update({ revoked_at: new Date().toISOString() })
+        .eq('id', existingInvitation.id)
+    }
+
+    // Generate secure token
+    const token = crypto.randomBytes(32).toString('base64url')
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + INVITATION_EXPIRY_DAYS)
+
+    // Create invitation token
+    const { data: invitation, error: inviteError } = await supabase
+      .from('invitation_tokens')
+      .insert({
+        email: email.toLowerCase(),
+        full_name,
+        organization_id: organizationId,
+        role,
+        token,
+        expires_at: expiresAt.toISOString(),
+        invited_by_user_id: user.id,
+      })
+      .select()
+      .single()
+
+    if (inviteError) {
+      console.error('Error creating invitation:', inviteError)
       return NextResponse.json(
-        { error: 'Failed to create membership' },
+        { error: 'Failed to create invitation' },
         { status: 500 }
       )
     }
@@ -177,19 +146,209 @@ export async function POST(request: Request) {
       user_id: user.id,
       organization_id: organizationId,
       action_type: 'member.invited',
-      resource_type: 'organization_membership',
+      resource_type: 'invitation_token',
+      resource_id: invitation.id,
       details: { invited_email: email, role },
     })
 
-    // TODO: In production, send invitation email here
-    // For now, user is auto-added
+    // TODO: Send invitation email via Supabase Magic Link or email service
+    // For now, return the accept URL for manual sharing
+    const acceptUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/accept-invite?token=${token}`
 
     return NextResponse.json({
       success: true,
-      message: authUser ? 'Member added successfully' : 'Invitation sent',
+      message: 'Invitation created',
+      // In production, remove this - email should be sent instead
+      acceptUrl,
     })
   } catch (error) {
     console.error('Error in POST /api/organizations/members/invite:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+// GET pending invitations for an organization
+export async function GET(request: Request) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const organizationId = searchParams.get('organizationId')
+
+    if (!organizationId) {
+      return NextResponse.json({ error: 'Organization ID required' }, { status: 400 })
+    }
+
+    // Verify current user is admin of this org
+    const { data: currentUserMembership } = await supabase
+      .from('organization_memberships')
+      .select('role')
+      .eq('organization_id', organizationId)
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .single()
+
+    const isAdmin = currentUserMembership?.role === 'primary_admin' || currentUserMembership?.role === 'backup_admin'
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Only admins can view invitations' },
+        { status: 403 }
+      )
+    }
+
+    // Fetch all invitations (pending and recent)
+    const { data: invitations, error } = await supabase
+      .from('invitation_tokens')
+      .select(`
+        id,
+        email,
+        full_name,
+        role,
+        token,
+        expires_at,
+        accepted_at,
+        revoked_at,
+        created_at,
+        last_sent_at,
+        send_count,
+        invited_by:users!invited_by_user_id(full_name)
+      `)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (error) {
+      console.error('Error fetching invitations:', error)
+      return NextResponse.json({ error: 'Failed to fetch invitations' }, { status: 500 })
+    }
+
+    // Categorize invitations
+    const now = new Date()
+    const categorized = {
+      pending: invitations?.filter(i => !i.accepted_at && !i.revoked_at && new Date(i.expires_at) > now) || [],
+      expired: invitations?.filter(i => !i.accepted_at && !i.revoked_at && new Date(i.expires_at) <= now) || [],
+      accepted: invitations?.filter(i => i.accepted_at) || [],
+      revoked: invitations?.filter(i => i.revoked_at) || [],
+    }
+
+    return NextResponse.json({ invitations: categorized })
+  } catch (error) {
+    console.error('Error in GET /api/organizations/members/invite:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+// PATCH to resend invitation
+export async function PATCH(request: Request) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { invitationId, action } = await request.json()
+
+    // Get the invitation
+    const { data: invitation } = await supabase
+      .from('invitation_tokens')
+      .select('*, organization:organizations(name)')
+      .eq('id', invitationId)
+      .single()
+
+    if (!invitation) {
+      return NextResponse.json({ error: 'Invitation not found' }, { status: 404 })
+    }
+
+    // Verify current user is admin of this org
+    const { data: currentUserMembership } = await supabase
+      .from('organization_memberships')
+      .select('role')
+      .eq('organization_id', invitation.organization_id)
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .single()
+
+    const isAdmin = currentUserMembership?.role === 'primary_admin' || currentUserMembership?.role === 'backup_admin'
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { error: 'Only admins can manage invitations' },
+        { status: 403 }
+      )
+    }
+
+    if (action === 'resend') {
+      // Generate new token and extend expiry
+      const newToken = crypto.randomBytes(32).toString('base64url')
+      const newExpiry = new Date()
+      newExpiry.setDate(newExpiry.getDate() + INVITATION_EXPIRY_DAYS)
+
+      const { error } = await supabase
+        .from('invitation_tokens')
+        .update({
+          token: newToken,
+          expires_at: newExpiry.toISOString(),
+          last_sent_at: new Date().toISOString(),
+          send_count: invitation.send_count + 1,
+        })
+        .eq('id', invitationId)
+
+      if (error) {
+        return NextResponse.json({ error: 'Failed to resend invitation' }, { status: 500 })
+      }
+
+      // TODO: Send email
+      const acceptUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/accept-invite?token=${newToken}`
+
+      await supabase.from('activity_logs').insert({
+        user_id: user.id,
+        organization_id: invitation.organization_id,
+        action_type: 'invitation.resent',
+        resource_type: 'invitation_token',
+        resource_id: invitationId,
+        details: { email: invitation.email },
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Invitation resent',
+        acceptUrl,
+      })
+    }
+
+    if (action === 'revoke') {
+      const { error } = await supabase
+        .from('invitation_tokens')
+        .update({ revoked_at: new Date().toISOString() })
+        .eq('id', invitationId)
+
+      if (error) {
+        return NextResponse.json({ error: 'Failed to revoke invitation' }, { status: 500 })
+      }
+
+      await supabase.from('activity_logs').insert({
+        user_id: user.id,
+        organization_id: invitation.organization_id,
+        action_type: 'invitation.revoked',
+        resource_type: 'invitation_token',
+        resource_id: invitationId,
+        details: { email: invitation.email },
+      })
+
+      return NextResponse.json({ success: true, message: 'Invitation revoked' })
+    }
+
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  } catch (error) {
+    console.error('Error in PATCH /api/organizations/members/invite:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
